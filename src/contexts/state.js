@@ -2,14 +2,18 @@ const actions = {
     init: "INIT"
   };
   
+  // const initialState = {
+  //   artifact: null,
+  //   web3: null,
+  //   accounts: null,
+  //   networkID: null,
+  //   contract: null
+  // };
   const initialState = {
-    artifact: null,
-    web3: null,
-    accounts: null,
-    networkID: null,
-    contract: null
+    token: null,
+    error:false
   };
-  
+
   const reducer = (state, action) => {
     const { type, data } = action;
     switch (type) {

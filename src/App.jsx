@@ -1,28 +1,37 @@
 import React from 'react';
-import Login from "./components/Login/Login"
-import Prova from "./components/prova"
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import useToken from './useToken';
+import { BrowserRouter as Router } from 'react-router-dom';
+import RouterComponent from './components/RouterComponent';
+import { useState } from 'react';
+import AuthProvider from './contexts/AuthProvider';
 
 
 function App() {
-  const { token, setToken } = useToken();
+  //const { token, setToken } = useToken();
+  //console.log("token dall'app:",token);
 
-  if(!token) {
-    return <Login setToken={setToken} />
-  }
+  // const { token, setToken } = useState('');
+  
+  // const setta=(input)=>
+  // {
+  //   console.log(input);
+  //   setToken(input);
+  // }
+
+ 
+
+//  if(!token) {
+//      return <Login setta={setta} />
+//  }
+  
   
   return (
-    <div className="wrapper">
-    <BrowserRouter>
-      <Routes>
-        <Route path="/prova">
-          <Prova />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </div>
-);
-}
+    <AuthProvider>
+      <Router>
+        <RouterComponent/>
+      </Router>
+    </AuthProvider>
+
+  );
+  }
 
 export default App;
