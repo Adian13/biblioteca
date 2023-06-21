@@ -3,13 +3,14 @@ import NavBar from '../../components/NavBar'
 import Footer from '../../components/Footer'
 import Search from '../../components/Search';
 import axios from "axios";
-import Modal from '../../components/LibiModal';
 import { MDBTable, MDBTableHead, MDBTableBody, MDBContainer, MDBRow,  MDBBtn, MDBIcon, MDBCol } from 'mdb-react-ui-kit';
+import LibriModal from '../../components/LibriModal';
 
 const BookList = () => {
 
     const [libri,setLibri] = useState([]);
     const [modalData, setModalData] = useState({});
+    const [listaBiblioteche, setListaBiblioteche] = useState([]);
     const [show, setShow] = useState(false);
 
     useEffect(() => {
@@ -22,23 +23,25 @@ const BookList = () => {
         fetchData();       
     }, [])
 
-    const showModal=(modalData)=>{
-        console.log("modal:",modalData.casaEditrice)
-        setModalData({"idLibro":modalData.idLibro,"titolo":modalData.titolo,"descrizione":modalData.descrizione,"isbn":modalData.isbn,"autore":modalData.autore});
-        setShow(true);
+    const showModal= async(modalData)=>{
 
+        const result = await (axios.get("http://localhost:8080/prenotazione-libri/"+modalData.idLibro.toString()+"/visualizza-libro"));
+        setListaBiblioteche(result.data)
+        setModalData(modalData);
+        setShow(true);
     }
 
     return (
         <>
-             <Modal {...modalData} show={show} setShow={setShow} />   
+             
+            <LibriModal {...modalData} show={show} setShow={setShow} listaBiblioteche={listaBiblioteche} />  
             <MDBContainer fluid className="p-0">
-                <NavBar  />
+                <NavBar/>
                 
                 <MDBRow className='me-4 ms-4'>
                     <MDBRow className='mt-5'>
                         <MDBCol size='7'>
-                            <Search scope='libri'/>
+                            <Search scope='libri' set={setLibri} URL="http://localhost:8080/prenotazione-libri/ricerca"/>
                         </MDBCol>
                     </MDBRow>
                     <MDBRow>
@@ -52,6 +55,11 @@ const BookList = () => {
                                 </tr>
                             </MDBTableHead>
                             <MDBTableBody >
+                            {libri.length===0 &&
+                                <tr >
+                                    <td colSpan={4} className='text-center'>Nessun libro da mostrare</td>
+                                </tr>
+                                }
                                 {
                                     libri.map((libro) => {
                                         return (
@@ -71,11 +79,12 @@ const BookList = () => {
                             </MDBTableBody>
                         </MDBTable>
                     </MDBRow>
-                    <MDBRow className='pt-5'>
-                        <Footer />
-                    </MDBRow>
                 </MDBRow>
             </MDBContainer>
+            <div className='mt-4'>
+                <Footer />
+            </div>
+
         </>
     );
 }

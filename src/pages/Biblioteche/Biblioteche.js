@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/NavBar'
 import Footer from '../../components/Footer'
 import Search from '../../components/Search';
-import Modal from '../../components/BibliotecheModal';
+import BibliotecheModal from '../../components/BibliotecheModal';
 import axios from "axios";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBContainer, MDBRow,  MDBBtn, MDBIcon, MDBCol } from 'mdb-react-ui-kit';
 
@@ -37,7 +37,7 @@ const Biblioteche = () => {
         <>
             <MDBContainer fluid className="p-0">
                 <NavBar  />
-                <Modal {...modalData} show={show} setShow={setShow} />
+                <BibliotecheModal {...modalData} show={show} setShow={setShow} />
                 <MDBRow className='me-4 ms-4'>
                     <MDBRow className='mt-5'>
                         <MDBCol size='7'>
