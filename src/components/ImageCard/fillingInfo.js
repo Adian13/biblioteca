@@ -6,7 +6,7 @@ export const fillingInfo={
     },
     clubs:{
         source: '/home/club-del-libro.jpg',
-        link: '/clubList',
+        link: '/clubDelLibro',
         text: 'Visualizza i club del libro e unisciti a milioni di lettori con i tuoi stessi interessi.'
     },
     esperti:{

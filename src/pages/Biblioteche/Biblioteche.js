@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/NavBar'
 import Footer from '../../components/Footer'
 import Search from '../../components/Search';
@@ -12,7 +11,7 @@ import { MDBTable, MDBTableHead, MDBTableBody, MDBContainer, MDBRow,  MDBBtn, MD
 const Biblioteche = () => {
 
     const [biblioteche, setBiblioteche] = useState([]);
-    const [modalData, setModalData] = useState({});
+    const [modalData, setModalData] = useState(null);
     const [show, setShow] = useState(false);
 
 
@@ -26,8 +25,14 @@ const Biblioteche = () => {
         fetchData();       
     }, [])
 
-    const showModal=(modalData)=>{
+    const showModal= async(modalData)=>{
 
+        const esperti = await axios.get("http://localhost:8080/club-del-libro/visualizza-esperti-biblioteca",{params:{"emailBiblioteca":modalData.email}})
+        const club = await axios.get("http://localhost:8080/club-del-libro/visualizza-clubs-biblioteca",{params:{"emailBiblioteca":modalData.email}})
+
+        modalData["listaEsperti"]=esperti.data;
+        modalData["listaClub"]=club.data;
+        console.log("modalData dopo elaborazione",modalData)
         setModalData(modalData);
         setShow(true);
 
@@ -37,7 +42,7 @@ const Biblioteche = () => {
         <>
             <MDBContainer fluid className="p-0">
                 <NavBar  />
-                <BibliotecheModal {...modalData} show={show} setShow={setShow} />
+                {modalData && <BibliotecheModal {...modalData} show={show} setShow={setShow} />}
                 <MDBRow className='me-4 ms-4'>
                     <MDBRow className='mt-5'>
                         <MDBCol size='7'>
@@ -83,7 +88,9 @@ const Biblioteche = () => {
                     </MDBRow>
                 </MDBRow>
             </MDBContainer>
-            <Footer/>
+            <MDBRow className='pt-5'>
+                <Footer />
+            </MDBRow>
 
         </>
     );

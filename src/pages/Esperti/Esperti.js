@@ -76,7 +76,9 @@ const Esperti = () => {
                     </MDBRow>
                 </MDBRow>
             </MDBContainer>
-            <Footer />
+            <MDBRow className='pt-5'>
+                <Footer />
+            </MDBRow>
         </>
     );
 }

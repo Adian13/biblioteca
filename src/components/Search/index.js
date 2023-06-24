@@ -10,9 +10,18 @@ const Search = ({scope,set,URL}) => {
   const [searchValue,setSearchValue]= useState("");
 
   const getData= async()=>{
+        if(scope==="club"){
+          let i={}
+          searchFilter==="generi"? i["generi"]=searchValue:i["citta"]=searchValue;
+          const result= await axios.get(URL,{params:i});
+          set(result.data);
+          //i=null;
+        }else{
+          const result=await axios.get(URL, {params:{"stringa": searchValue, "filtro": searchFilter}});
+          set(result.data);
+        }
 
-        const result=await axios.get(URL, {params:{"stringa": searchValue, "filtro": searchFilter}});
-        set(result.data);
+        
 
   }
   return (

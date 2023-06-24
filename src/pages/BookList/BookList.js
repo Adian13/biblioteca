@@ -9,17 +9,16 @@ import LibriModal from '../../components/LibriModal';
 const BookList = () => {
 
     const [libri,setLibri] = useState([]);
-    const [modalData, setModalData] = useState({});
+    const [modalData, setModalData] = useState(null);
     const [listaBiblioteche, setListaBiblioteche] = useState([]);
     const [show, setShow] = useState(false);
 
     useEffect(() => {
         async function fetchData(){
-
             const result = await (axios.get("http://localhost:8080/prenotazione-libri"));
-            console.log("libri",result.data)
             setLibri(result.data);
-        }      
+        }
+              
         fetchData();       
     }, [])
 
@@ -34,7 +33,7 @@ const BookList = () => {
     return (
         <>
              
-            <LibriModal {...modalData} show={show} setShow={setShow} listaBiblioteche={listaBiblioteche} />  
+            {modalData &&<LibriModal {...modalData} show={show} setShow={setShow} listaBiblioteche={listaBiblioteche} /> } 
             <MDBContainer fluid className="p-0">
                 <NavBar/>
                 
@@ -66,8 +65,18 @@ const BookList = () => {
                                             <tr>
                                                 <th scope='row'><img>{libro.immagineLibro}</img></th>
                                                 <td>{libro.titolo}</td>
-                                                <td>{libro.generi}</td>
-                                                <td className='d-flex justify-content-center'>
+                                                <td>
+                                                    <div>
+                                                        {
+                                                            libro.generi.map((genere =>{
+                                                                return(
+                                                                    <p key={genere}>{genere}</p>
+                                                                )
+                                                            }))
+                                                        }
+                                                    </div>
+                                                </td>
+                                                <td className=' text-center'>
                                                 <MDBBtn floating style={{ backgroundColor: '#004AAD' }} onClick={()=>{showModal(libro)}}>
                                                     <MDBIcon fas icon="search" size="lg" />
                                                 </MDBBtn>
@@ -81,9 +90,9 @@ const BookList = () => {
                     </MDBRow>
                 </MDBRow>
             </MDBContainer>
-            <div className='mt-4'>
+            <MDBRow className='pt-5'>
                 <Footer />
-            </div>
+            </MDBRow>
 
         </>
     );

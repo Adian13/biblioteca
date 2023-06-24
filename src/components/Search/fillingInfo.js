@@ -16,5 +16,11 @@ export const fillingInfo={
         label1:"Cerca per titolo",
         value2:"genere",
         label2:"Cerca per genere",
+    },
+    club:{
+        value1:"generi",
+        label1:"Cerca per genere",
+        value2:"citta",
+        label2:"Cerca per città",
     }
 }

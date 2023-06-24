@@ -26,7 +26,9 @@ const HomePage = () => {
           </MDBCol>
         </MDBRow>
     </MDBContainer>
-    <Footer/>
+    <MDBRow className='pt-4'>
+        <Footer />
+    </MDBRow>
 
     </>
 

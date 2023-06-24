@@ -23,7 +23,7 @@ const NavBar = () => {
         <MDBContainer fluid >
         <MDBNavbarBrand className='d-flex justify-content-start align-items-center' onClick={()=>navigate('/')}>
           <img
-            src='biblionet.png'
+            src='public\biblionet.png'
             height='50'
             alt='logo'
           />

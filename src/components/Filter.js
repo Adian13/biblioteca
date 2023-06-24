@@ -10,7 +10,7 @@ const Filter = () => {
         <MDBRow>
             <MDBCol size='1' className='ps-0'>
                 <MDBDropdown >
-                    <MDBDropdownToggle style={{backgroundColor:"#004AAD"}}>Generi</MDBDropdownToggle>
+                    <MDBDropdownToggle  className='me-1 btn-dark btn-rounded btn-lg' style={{backgroundColor:"#004AAD"}}>Generi</MDBDropdownToggle>
                     <MDBDropdownMenu>
                         <MDBDropdownItem link>Action</MDBDropdownItem>
                         <MDBDropdownItem link>Another action</MDBDropdownItem>
@@ -20,7 +20,7 @@ const Filter = () => {
             </MDBCol>
             <MDBCol>
                 <MDBDropdown>
-                    <MDBDropdownToggle style={{backgroundColor:"#004AAD"}}>Città</MDBDropdownToggle>
+                    <MDBDropdownToggle className='me-1 btn-dark btn-rounded btn-lg ms-3' style={{backgroundColor:"#004AAD"}}>Città</MDBDropdownToggle>
                     <MDBDropdownMenu>
                         <MDBDropdownItem link>Action</MDBDropdownItem>
                         <MDBDropdownItem link>Another action</MDBDropdownItem>
