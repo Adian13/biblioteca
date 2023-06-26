@@ -63,7 +63,7 @@ const BookList = () => {
                                     libri.map((libro) => {
                                         return (
                                             <tr>
-                                                <th scope='row'><img>{libro.immagineLibro}</img></th>
+                                                <th scope='row'>inserisci immagine</th>
                                                 <td>{libro.titolo}</td>
                                                 <td>
                                                     <div>
