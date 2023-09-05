@@ -4,6 +4,7 @@ import Footer from '../../components/Footer'
 import Search from '../../components/Search';
 import BibliotecheModal from '../../components/BibliotecheModal';
 import axios from "axios";
+
 import { MDBTable, MDBTableHead, MDBTableBody, MDBContainer, MDBRow,  MDBBtn, MDBIcon, MDBCol } from 'mdb-react-ui-kit';
 
 
@@ -19,7 +20,7 @@ const Biblioteche = () => {
         async function fetchData(){
 
             const result = await (axios.get("http://localhost:8080/biblioteca/visualizza-biblioteche"));
-            console.log("biblioteche",result)
+            console.log("biblioteche",result.data)
             setBiblioteche(result.data);
         }      
         fetchData();       
@@ -46,7 +47,7 @@ const Biblioteche = () => {
                 <MDBRow className='me-4 ms-4'>
                     <MDBRow className='mt-5'>
                         <MDBCol size='7'>
-                            <Search scope='biblioteche' set={setBiblioteche} URL="http://localhost:8080/biblioteca/ricerca"/>
+                            <Search scope='biblioteche' set={setBiblioteche} URL={"http://localhost:8080/biblioteca/ricerca"}/>
                         </MDBCol>
                     </MDBRow>
                     <MDBRow>

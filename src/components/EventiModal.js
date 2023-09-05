@@ -1,5 +1,6 @@
-import React from 'react'
-
+import React, {useState} from 'react'
+import useAuth from"../contexts/useAuth";
+import Modal from "../components/CreaEventoModal"
 import {
     MDBModal,
     MDBModalTitle,
@@ -15,8 +16,23 @@ import {
  } from 'mdb-react-ui-kit';
 
 
-const IscrittiModal = ({modalEventiData,showEventi,setShowEventi}) => {
-  return (
+
+const IscrittiModal = ({modalEventiData,showEventi,setShowEventi,amministratore}) => {
+    
+    const {state: { email } } = useAuth();
+    const [modalData, setModalData] = useState(null);
+    const [show, setShow] = useState(false);
+
+    const showModal= async(modalData)=>{
+
+        setModalData(modalData);
+        setShowEventi(false);
+        setShow(true);
+    }
+    
+    return (
+    <>
+    <Modal modalData={modalData} show={show} setShow={setShow}/> 
     <MDBModal show={showEventi} setShow={setShowEventi} tabIndex='-1'>
         <MDBModalDialog size='xl'>
           <MDBModalContent>
@@ -25,15 +41,16 @@ const IscrittiModal = ({modalEventiData,showEventi,setShowEventi}) => {
               <MDBBtn className='btn-close' color='none' onClick={()=>{setShowEventi(false)}}></MDBBtn>
             </MDBModalHeader>
             {/* <MDBModalBody style={{backgroundColor:"#E3F2FD"}}> */}
-            <MDBModalBody className='mt-4'>
-                <MDBTable striped hover borderColor="primary">
+            <MDBModalBody>
+                {amministratore&&<MDBBtn className='btn-dark btn-rounded btn-lg mt-3 d-flex align-items-center' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>{showModal(null)}} > <MDBIcon className='me-2 shadow' size="2x" fas icon="plus-circle" />Crea un nuovo evento</MDBBtn>}
+                <MDBTable striped hover borderColor="primary" className='mt-4'>
                     <MDBTableHead style={{ backgroundColor: '#38B6FF' }}>
                         <tr className="text-uppercase fs-5 fw-bold font-monospace">
                             <th scope='col'>Nome</th>
                             <th scope='col'>Descrizione</th>
                             <th scope='col'>Data</th>
                             <th scope='col'>Ora</th>
-                            <th scope='col' className='text-center'>Azioni</th>
+                            {amministratore&&<th scope='col' className='text-center'>Azioni</th>}
                         </tr>
                     </MDBTableHead>
                     <MDBTableBody >
@@ -50,11 +67,14 @@ const IscrittiModal = ({modalEventiData,showEventi,setShowEventi}) => {
                                     <td>{evento.descrizione}</td>
                                     <td>{evento.data}</td>
                                     <td>{evento.ora}</td>
-                                    <td className='text-center'>
+                                    {amministratore&&<td className='text-center'>
                                         <MDBBtn  id={evento.nome} floating style={{ backgroundColor: '#004AAD' }} >
-                                            <MDBIcon fas icon="envelope-open-text" size="lg" />
+                                            <MDBIcon far icon="trash-alt" />
                                         </MDBBtn>
-                                    </td>
+                                        <MDBBtn  id={evento.nome} floating style={{ backgroundColor: '#004AAD' }} className='ms-2 text-center' onClick={()=>showModal(evento)}>
+                                            <MDBIcon far icon="edit" />
+                                        </MDBBtn>
+                                    </td>}
                                 </tr>
                             )
                             })
@@ -65,6 +85,7 @@ const IscrittiModal = ({modalEventiData,showEventi,setShowEventi}) => {
           </MDBModalContent>
         </MDBModalDialog>
     </MDBModal>
+    </>
   )
 }
 

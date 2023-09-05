@@ -8,7 +8,8 @@ import Esperti from '../../pages/Esperti/Esperti';
 import ClubList from '../../pages/ClubList/ClubList';
 import BookList from '../../pages/BookList/BookList';
 import AreaUtente from '../../pages/AreaUtente/AreaUtente';
-import Club from '../../pages/Club/Club'
+import Club from '../../pages/Club/Club';
+import InserimentoLibri from '../../pages/InserimentoLibri/InserimentoLibri';
 
 export const routes=[
     {
@@ -41,7 +42,17 @@ export const routes=[
     },
     {
         path: '/bookList',
-        element: <BookList/>
+        element: <BookList/>,
+        children:[
+        {
+            path: ':biblioteca',
+            element: <BookList/>
+        }
+        ]
+    },
+    {
+        path: '/InserimentoLibro',
+        element: <InserimentoLibri/>
     },
     {
         path: '/areaUtente',

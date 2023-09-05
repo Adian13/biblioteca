@@ -1,5 +1,7 @@
 import React from 'react'
 import useAuth from"../contexts/useAuth";
+import axios from "axios";
+
 import {
     MDBModal,
     MDBModalDialog,
@@ -16,9 +18,17 @@ import {
     MDBBtn
  } from 'mdb-react-ui-kit';
 
-const LibriModal = ({titolo,descrizione,isbn,autore,casaEditrice,generi,show,setShow,listaBiblioteche }) => {
+const LibriModal = ({idLibro,titolo,descrizione,isbn,autore,casaEditrice,generi,show,setShow,listaBiblioteche }) => {
 
-    const {state: { token } } = useAuth();
+    const {state: { utente } } = useAuth();
+
+    const prenotaLibri = async()=>{
+        const result = await (axios.get("http://localhost:8080/prenotazione-libri/"+idLibro+"/ottieni-libro"));
+        if(result.status===200){
+            alert("Libro prenotato")
+
+        }
+    }
 
     return (
         <MDBModal show={show} setShow={setShow} tabIndex='-1'>
@@ -60,8 +70,8 @@ const LibriModal = ({titolo,descrizione,isbn,autore,casaEditrice,generi,show,set
                                                     <div className='ms-2 me-auto'>
                                                     <div className='fw-bold fs-3'>Biblioteca {biblioteca.nomeBiblioteca}</div>{biblioteca.via}, {biblioteca.citta}
                                                     </div>
-                                                    {token?
-                                                    <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#004AAD"}} type='button'>
+                                                    {utente==="Lettore"?
+                                                    <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>{prenotaLibri()}}>
                                                     Prenota
                                                     </MDBBtn>:
                                                     <MDBBtn disabled className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#004AAD"}} type='button'>

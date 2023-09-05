@@ -18,6 +18,7 @@ import {
     MDBCardText,
     MDBCardBody,
     MDBCardGroup,
+    MDBTooltip,
     MDBCardImage } from 'mdb-react-ui-kit';
 
 const Club = () => {
@@ -29,15 +30,15 @@ const Club = () => {
     const [show, setShow] = useState(false);
     const [modalEventiData, setModalEventiData] = useState(null);
     const [showEventi, setShowEventi] = useState(false);
-    const {state: { token } } = useAuth();
+    const {state: { utente,token,email } } = useAuth();
 
     useEffect(() => {
         async function fetchData(){
-            const result = await (axios.get("http://localhost:8080/club-del-libro/"+id));
-            setInfo(result.data);
-            if(token){
+            const result = await (axios.get("http://localhost:8080/club-del-libro?id="+id));
+            setInfo(result.data[0]);
+            if(utente==="Lettore"){
                 const AuthStr = 'Bearer '.concat(token);
-                const iscritto=await axios.get("http://localhost:8080/club-del-libro/partecipazione-lettore/?idClub="+id,{ headers: { Authorization: AuthStr } });
+                const iscritto=await axios.get("http://localhost:8080/club-del-libro/partecipazione-lettore/?idClub="+id,{ headers: { Authorization: AuthStr } })  
                 setIscritto(iscritto.data);
             }
         }      
@@ -46,7 +47,11 @@ const Club = () => {
 
     const showModal= async()=>{
 
-        const iscritti = await axios.post("http://localhost:8080/club-del-libro/lettori-club/?id="+id)
+        const formData = new FormData();
+        formData.append("id",id);
+
+        const iscritti = await axios.post("http://localhost:8080/club-del-libro/lettori-club", formData)
+        console.log("iscritti",iscritti.data)
         setModalData(iscritti.data);
         setShow(true);
 
@@ -54,9 +59,30 @@ const Club = () => {
 
     const showModalEventi= async()=>{
 
-        const eventi = await axios.post("http://localhost:8080/club-del-libro/eventi-club?id="+id)
+        const formData = new FormData();
+        formData.append("id",id);
+        const AuthStr = 'Bearer '.concat(token);
+
+        const eventi = await axios.post("http://localhost:8080/club-del-libro/eventi-club",formData,{ headers:{ Authorization: AuthStr}})
         setModalEventiData(eventi.data.eventi);
         setShowEventi(true);
+
+    }
+
+    const partecipazioneLettore = async(azione)=>{
+        if(azione){      
+            const AuthStr = 'Bearer '.concat(token);
+            const iscrizione = await axios.post("http://localhost:8080/club-del-libro/iscrizione?id="+id, {},{ headers:{ Authorization: AuthStr}});
+            if(iscrizione.data["statusOk"]){
+                setIscritto(true);
+            }
+        } else{
+            const AuthStr = 'Bearer '.concat(token);
+            const abbandono = await axios.post("http://localhost:8080/club-del-libro/abbandono?id="+id, {},{ headers:{ Authorization: AuthStr}});
+            if(abbandono.data["statusOk"]){
+                setIscritto(false);
+            }
+        }
 
     }
 
@@ -65,7 +91,7 @@ const Club = () => {
         <MDBContainer fluid className="p-0 pb-5" style={{backgroundColor:"#E3F2FD"}}>
             <NavBar  />
             {modalData && <IscrittiModal modalData={modalData} show={show} setShow={setShow} />}
-            {modalEventiData && <EventiModal modalEventiData={modalEventiData} showEventi={showEventi} setShowEventi={setShowEventi} />}
+            {modalEventiData && <EventiModal modalEventiData={modalEventiData} showEventi={showEventi} setShowEventi={setShowEventi} amministratore={info.Esperto.email==email} />}
             <MDBRow className='me-5 ms-5 mt-5'>
                 {/* <MDBCard style={{ maxWidth: '540px' }}> */}
                 {info&&
@@ -77,12 +103,12 @@ const Club = () => {
                         </MDBCol>
                         <MDBCol md='4'>
                             <MDBCardBody className='text-center mt-4'>
-                            <MDBCardTitle className='mt-5'><h2><b>{info.Club.nome}</b></h2></MDBCardTitle>
+                            <MDBCardTitle className='mt-5'><h2><b>{info.nome}</b></h2></MDBCardTitle>
                             <MDBCardText className='mt-4'>
-                            <h4><i>{info.Club.descrizione}</i></h4>
+                            <h4><i>{info.descrizione}</i></h4>
                             </MDBCardText>
-                            {token&&!iscritto&&<MDBBtn className='btn-dark btn-rounded btn-lg ms-3 mt-2' style={{backgroundColor:"#004AAD"}}> Iscriviti</MDBBtn>}
-                            {token&&iscritto&&<MDBBtn className='btn-dark btn-rounded btn-lg ms-3 mt-2' style={{backgroundColor:"#004AAD"}}> Abbandona</MDBBtn>}
+                            {utente==="Lettore"&&!iscritto&&<MDBBtn className='btn-dark btn-rounded btn-lg ms-3 mt-2' style={{backgroundColor:"#004AAD"}} onClick={()=>{partecipazioneLettore(true)}}> Iscriviti</MDBBtn>}
+                            {utente==="Lettore"&&iscritto&&<MDBBtn className='btn-dark btn-rounded btn-lg ms-3 mt-2' style={{backgroundColor:"#004AAD"}} onClick={()=>{partecipazioneLettore(false)}}> Abbandona</MDBBtn>}
                             </MDBCardBody>
                         </MDBCol>
                         <MDBCol md='4'>
@@ -90,11 +116,11 @@ const Club = () => {
                             <MDBCardTitle><h3><b>Informazioni</b></h3></MDBCardTitle>
                             <hr></hr>
                             <MDBCardText className='mt-4'>
-                                <p><h6><MDBIcon fas icon="user-tie" /> esperto:</h6> <h4><b>{info.Esperto.nome} {info.Esperto.cognome}</b></h4></p>
-                                <p><h6><MDBIcon fas icon="at" /> email di contatto:</h6> <h4><b>{info.Esperto.email}</b></h4></p>
+                                <p><h6><MDBIcon fas icon="user-tie" /> esperto:</h6> <h4><b>{info.nomeEsperto}</b></h4></p>
+                                <p><h6><MDBIcon fas icon="at" /> email di contatto:</h6> <h4><b>{info.email}</b></h4></p>
                             </MDBCardText>
                             <MDBCardText className='mt-5'>
-                            <large className='text-muted'>I nostri generi: {info.Club.generi.map((genere)=>{return(<b>{genere} </b>)})}</large>
+                                <large className='text-muted'>I nostri generi: {info.generi.map((genere)=>{return(<b>{genere} </b>)})}</large> 
                             </MDBCardText>
                             </MDBCardBody>
                         </MDBCol>
@@ -108,7 +134,7 @@ const Club = () => {
                         <MDBCardTitle ><h3><b >Iscrizioni</b></h3></MDBCardTitle>
                         <hr></hr>
                         <MDBCardText>
-                            <h5>Visualizza gli <a className="text-decoration-none" onClick={()=>{showModal()}}>iscritti</a> al club</h5>     
+                            <h5>Visualizza gli <a className="text-decoration-none" onClick={()=>{showModal()}}>iscritti</a> al club</h5>      
                         </MDBCardText>
                         <div className='text-center'></div>               
                         </MDBCardBody>

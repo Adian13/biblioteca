@@ -1,16 +1,11 @@
 const actions = {
     init: "INIT"
   };
-  
-  // const initialState = {
-  //   artifact: null,
-  //   web3: null,
-  //   accounts: null,
-  //   networkID: null,
-  //   contract: null
-  // };
+
   const initialState = {
     token: null,
+    utente:null,
+    email:null,
     error:false
   };
 

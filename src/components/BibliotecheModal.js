@@ -16,8 +16,11 @@ import {
     MDBBtn
  } from 'mdb-react-ui-kit';
 
-const Modal = ({listaEsperti,listaClub,email,citta,via,recapitoTelefonico,nomeBiblioteca,show,setShow}) => {
+ import { useNavigate } from 'react-router-dom';
 
+const Modal = ({listaEsperti,listaClub,email,citta,via,recapitoTelefonico,nomeBiblioteca,show,setShow}) => {
+  
+  const navigate = useNavigate();
  
   return (
     <MDBModal show={show} setShow={setShow} tabIndex='-1'>
@@ -43,7 +46,7 @@ const Modal = ({listaEsperti,listaClub,email,citta,via,recapitoTelefonico,nomeBi
                           <MDBListGroupItem><MDBIcon fas icon="at" /><i className='ms-2'>email: </i><h5><b>{email}</b></h5></MDBListGroupItem>
                       </MDBListGroup>
                       </div>
-                      <div className='col-md-5 text-center shadow mt-3 rounded'>
+                      <div className='col-md-5 text-center shadow mt-3 rounded' onClick={()=>navigate('/bookList/'+email)}>
                         <MDBIcon fas icon="book" size="8x" className="mt-3"/>
                         <h5 className='mt-3'><b>Prenota un libro presso la nostra biblioteca</b></h5>
                       </div>

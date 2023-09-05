@@ -28,20 +28,9 @@ const navigate = useNavigate();
 
 const { login,state: {token,error} } = useAuth();
 
-// const handleClick= ()=>{
-//   const token = await loginUser({
-//     email,
-//     password
-// });
-// const json=await token.json();
-// //token.json().then(resp => setToken(resp.data.token));
-// setta(json.data.token);
-// }
 
 useEffect(() => {
-  console.log("sono use effectcon tk ed errore", token, !error);
   if(!error & (token!=null)){
-    console.log("sono nell'if")
     navigate("/");
    }
 }, [token,error]);

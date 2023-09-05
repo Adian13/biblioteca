@@ -9,7 +9,7 @@ const Esperti = () => {
     const [esperti, setEsperti]=useState([]);
     useEffect(() => {
         async function getData(){
-            const response =  await axios.get('http://localhost:8080/comunicazione-esperto/lista-esperti');
+            const response =  await axios.get('http://localhost:8080/esperto/lista-esperti');
             console.log("generi",response.data)
             setEsperti(response.data)
         }      
