@@ -6,29 +6,57 @@ import axios from "axios";
 import useAuth from"../../contexts/useAuth";
 import Modal from '../../components/CreaClubModal';
 import { useNavigate } from 'react-router-dom';
+import config from '../../config';
 import { MDBTable, MDBTableHead, MDBTableBody, MDBContainer, MDBRow,  MDBBtn, MDBIcon, MDBCol } from 'mdb-react-ui-kit';
 
-const ClubList = () => {
+const ClubList = ({lettore,esperto}) => {
 
     const [clubs, setClubs] = useState([]);
     const navigate = useNavigate();
-    const {state: { utente,email } } = useAuth();
+    const {state: { utente,email,token } } = useAuth();
     const [modalData, setModalData] = useState(null);
     const [show, setShow] = useState(false);
 
     useEffect(() => {
-        async function fetchData(){
+        if(lettore=="true"){
+            //todo:eseguire il check sul token, cosa succede se accedono a questo ramo di if senza token
+            async function getData(){
+                console.log("Sono nel primo if",lettore)
+                const AuthStr = 'Bearer '.concat(token);
+                const response =  await axios.post("http://"+config.ip+":"+config.port+"/lettore/visualizza-clubs-lettore/",{},{ headers:{ Authorization: AuthStr}});
+                console.log("risposta",response.data)
+                setClubs(response.data)
+            }      
+    
+            getData();
+            
+        }else if(esperto=="true"){
+            //todo:eseguire il check sul token, cosa succede se accedono a questo ramo di if senza token
+            async function getData(){
+                console.log("Sono nel secondo if",esperto)
+                const AuthStr = 'Bearer '.concat(token);
+                const response =  await axios.post("http://"+config.ip+":"+config.port+"/esperto/visualizza-clubs-esperto/",{},{ headers:{ Authorization: AuthStr}});
+                console.log("risposta",response.data)
+                setClubs(response.data)
+            }      
+    
+            getData();
 
-            const result = await (axios.get("http://localhost:8080/club-del-libro"));
+        }else{
+        async function fetchData(){
+            const result = await (axios.get("http://"+config.ip+":"+config.port+"/club-del-libro"));
+            console.log(result.data)
             setClubs(result.data);
         }      
         fetchData();
+    }
 
-    }, [])
+    }, [show])
 
     const showModal= async(modalData)=>{
-
+        
         setModalData(modalData);
+        console.log("modal data",modalData)
         setShow(true);
     }
 
@@ -39,7 +67,7 @@ const ClubList = () => {
             <NavBar  />
             <MDBRow className='me-4 ms-4 mt-5'>
             <MDBCol size='7'>
-                <Search scope='club' set={setClubs} URL="http://localhost:8080/club-del-libro"/>
+                <Search scope='club' set={setClubs} URL={"http://"+config.ip+":"+config.port+"/club-del-libro"}/>
             </ MDBCol>
             {utente==="Esperto"&&
                 <MDBCol className='d-flex align-items-center justify-content-center' size='5'>
@@ -67,11 +95,11 @@ const ClubList = () => {
                                     <td colSpan={7} className='text-center'>Nessun club da mostrare</td>
                                 </tr>
                             }
-                            {
+                            {clubs&&
                                 clubs.map((club) => {
                                     return (
                                         <tr>
-                                            <th scope='row'>{}</th>
+                                            <th scope='row'>{club.immagineCopertina ? <img width="100" height="100" style={{objectFit:"cover"}}  src={`data:image/png;base64,${club.immagineCopertina}`}/>: 'Immagine non disponibile'}</th>
                                             <td>{club.nome}</td>
                                             <td>{club.descrizione}</td>
                                             <td>

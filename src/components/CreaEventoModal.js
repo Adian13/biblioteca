@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import {
     MDBModal,
     MDBModalDialog,
@@ -11,8 +11,50 @@ import {
     MDBInput,
     MDBTextArea
  } from 'mdb-react-ui-kit';
+ import axios from 'axios';
+ import config from '../config';
+ import useAuth from"../contexts/useAuth";
 
-const CreaEventoModal = ({modalData,show,setShow}) => {
+const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
+    const [evento,setEvento]=useState({nome:"",descrizione:"",data:"",ora:"",libro:""});
+    const {state: { token } } = useAuth();
+
+    useEffect(() => {
+        if(modalData!=null){
+            if(modalData.libro==null){modalData.libro=""}
+            setEvento({...modalData,"ora":modalData.ora.substring(0,5)})
+        }      
+    }, [])
+
+    const handleSubmit=async()=> {
+        const formData = new FormData();
+        console.log("evento",evento)
+        formData.append("idClub",idClub);
+        formData.append("nome",evento.nome);
+        formData.append("descrizione",evento.descrizione);
+        formData.append("timeString",evento.ora);
+        formData.append("dateString",evento.data);
+        
+        const AuthStr = 'Bearer '.concat(token);
+
+        const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/crea",formData,{ headers:{"Content-Type":"multipart/form-data", Authorization: AuthStr}})
+        console.log("risposta",response.data)
+        if(response.data.statusOk){
+            setEvento({nome:"",descrizione:"",data:"",ora:"",libro:""})
+        }
+
+    }
+
+        const handleInputChange=(e)=>{
+            const {name,value}=e.target;
+    
+                setEvento({...evento,[name]:value})
+            
+    
+        }
+    
+
+
     
   return (
     <MDBModal show={show} setShow={setShow} tabIndex='-1'>
@@ -27,16 +69,16 @@ const CreaEventoModal = ({modalData,show,setShow}) => {
                 <label className='mt-2 mb-2 fs-4'><b>Inserisci i dati relativi all'evento</b></label>
                 <div className='row mt-3'>
                     <div className='col-md-6'>
-                        <MDBInput style={{backgroundColor:"#FFFFFF"}} label='Nome' id='1' type='text' value={modalData?modalData.nome:""} />
-                        <MDBTextArea style={{backgroundColor:"#FFFFFF"}} className='mt-3' label='Descrizione' id='2' rows={3} value={modalData?modalData.descrizione:""} />
+                        <MDBInput name="nome" style={{backgroundColor:"#FFFFFF"}} label='Nome' id='1' type='text' value={evento.nome} onChange={handleInputChange}/>
+                        <MDBTextArea style={{backgroundColor:"#FFFFFF"}} name="descrizione" className='mt-3' label='Descrizione' id='2' rows={3} value={evento.descrizione} onChange={handleInputChange}/>
                     </div>
                     <div className='col-md-6 text-center'>
-                        <MDBInput style={{backgroundColor:"#FFFFFF"}} label='Data' id='3' type='date' value={modalData?modalData.data:""} />
-                        <MDBInput style={{backgroundColor:"#FFFFFF"}} label='Ora' id='4' type='time' className='mt-3' value={modalData?modalData.ora:""} />
-                        <MDBInput style={{backgroundColor:"#FFFFFF"}} label='Libro associato' id='1' type='text' className='mt-3' />
+                        <MDBInput style={{backgroundColor:"#FFFFFF"}} name="data" label='Data' id='3' type='date' value={evento.data} onChange={handleInputChange}/>
+                        <MDBInput style={{backgroundColor:"#FFFFFF"}} name="ora" label='Ora' id='4' type='time' className='mt-3' value={evento.ora} onChange={handleInputChange}/>
+                        <MDBInput style={{backgroundColor:"#FFFFFF"}} name="libro" label='Libro associato' id='1' type='text' className='mt-3' value={evento.libro} onChange={handleInputChange}/>
                     </div>
                     <div className='row mt-4 mb-3 text-center'>
-                        <MDBBtn className='btn-dark btn-rounded btn-lg ms-2' style={{backgroundColor:"#004AAD"}} type='button' >Invia dati</MDBBtn>
+                        <MDBBtn className='btn-dark btn-rounded btn-lg ms-2' style={{backgroundColor:"#004AAD"}} type='button' onClick={handleSubmit}>Invia dati</MDBBtn>
                     </div>
                 </div>
             </div>

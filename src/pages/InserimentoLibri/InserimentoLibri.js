@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
     MDBTabs,
     MDBTabsItem,
@@ -15,16 +15,26 @@ import {
 import NavBar from '../../components/NavBar'
 import Footer from '../../components/Footer'
 import InserimentoLibriForm from '../../components/InserimentoLibriForm';
+import axios from "axios";
+import config from '../../config';
 
 const InserimentoLibri = () => {
     
     const [tab, setTab] = useState('tab1');
+    const [generi,setGeneri]=useState([]);
+
+    useEffect(() => {
+        async function fetchData(){
+            const result = await axios.get("http://"+config.ip+":"+config.port+"/generi");
+            console.log("generi",result.data)
+            setGeneri(result.data)}
+        fetchData();      
+    }, [])
 
     const handleBasicClick = (value) => {
         if (value === tab) {
           return;
         }
-    
         setTab(value);
       };
   
@@ -58,9 +68,9 @@ const InserimentoLibri = () => {
                     </MDBTabsItem>
                 </MDBTabs>
                 <MDBTabsContent className='mb-3 mt-5 d-flex justify-content-center' >
-                    <MDBTabsPane show={tab === 'tab1'}><InserimentoLibriForm scope="isbn"/></MDBTabsPane>
-                    <MDBTabsPane show={tab === 'tab2'}><InserimentoLibriForm scope="archivio"/></MDBTabsPane>
-                    <MDBTabsPane show={tab === 'tab3'}><InserimentoLibriForm scope="man"/></MDBTabsPane>
+                    <MDBTabsPane show={tab === 'tab1'}><InserimentoLibriForm scope="isbn" generi={generi}/></MDBTabsPane>
+                    <MDBTabsPane show={tab === 'tab2'}><InserimentoLibriForm scope="archivio" generi={generi}/></MDBTabsPane>
+                    <MDBTabsPane show={tab === 'tab3'}><InserimentoLibriForm scope="man" generi={generi}/></MDBTabsPane>
                 </MDBTabsContent>
             </MDBCardBody>
         </MDBCard>

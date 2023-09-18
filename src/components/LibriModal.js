@@ -1,6 +1,7 @@
 import React from 'react'
 import useAuth from"../contexts/useAuth";
 import axios from "axios";
+import config from '../config';
 
 import {
     MDBModal,
@@ -14,18 +15,27 @@ import {
     MDBListGroup, 
     MDBListGroupItem,
     MDBModalTitle,
+    MDBCardImage,
     MDBIcon,
     MDBBtn
  } from 'mdb-react-ui-kit';
 
-const LibriModal = ({idLibro,titolo,descrizione,isbn,autore,casaEditrice,generi,show,setShow,listaBiblioteche }) => {
+const LibriModal = ({id,titolo,descrizione,isbn,autore,casaEditrice,generi,show,setShow,listaBiblioteche,immagineLibro }) => {
 
-    const {state: { utente } } = useAuth();
+    const {state: { utente,token } } = useAuth();
 
-    const prenotaLibri = async()=>{
-        const result = await (axios.get("http://localhost:8080/prenotazione-libri/"+idLibro+"/ottieni-libro"));
-        if(result.status===200){
+    const prenotaLibri = async(idBiblio)=>{
+
+        const formData = new FormData();
+        formData.append("idLibro",id);
+        formData.append("emailBiblioteca",idBiblio);
+        const AuthStr = 'Bearer '.concat(token);
+        const result = await axios.post("http://"+config.ip+":"+config.port+"/prenotazione-libri/conferma-prenotazione/",formData,{ headers: { Authorization: AuthStr } });
+        
+        if(result.data.statusOk){
             alert("Libro prenotato")
+        }else{
+            alert("Impossibile prenotare libro")
 
         }
     }
@@ -43,10 +53,12 @@ const LibriModal = ({idLibro,titolo,descrizione,isbn,autore,casaEditrice,generi,
                     <div className='row'>
                         <div className='col-md-5'>
                             <MDBCard className="shadow bg-opacity-100"> 
-                            <MDBCardBody>
-                                {/*inserire immagine qui*/}
-                                <div className='text-center p-3' style={{backgroundColor:"#004AAD"}}>
-                                    <MDBCardTitle><h2><b class="text-white align-middle"> {titolo}</b></h2></MDBCardTitle>
+                            <MDBCardBody >
+                                <div className="text-center">
+                                    <MDBCardImage  style={{objectFit:"cover"}} height="400" width="350" src={`data:image/png;base64,${immagineLibro}`} />
+                                </div>
+                                <div className='text-center p-3 mt-2' style={{backgroundColor:"#004AAD"}}>
+                                    <MDBCardTitle><h2><b className="text-white align-middle"> {titolo}</b></h2></MDBCardTitle>
                                 </div>
                                 <MDBListGroup className='mt-4'>
                                     <MDBListGroupItem noBorders><b className='ms-1'>Descrizione: </b> <h5> {descrizione}</h5></MDBListGroupItem>
@@ -71,7 +83,7 @@ const LibriModal = ({idLibro,titolo,descrizione,isbn,autore,casaEditrice,generi,
                                                     <div className='fw-bold fs-3'>Biblioteca {biblioteca.nomeBiblioteca}</div>{biblioteca.via}, {biblioteca.citta}
                                                     </div>
                                                     {utente==="Lettore"?
-                                                    <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>{prenotaLibri()}}>
+                                                    <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>{prenotaLibri(biblioteca.email)}}>
                                                     Prenota
                                                     </MDBBtn>:
                                                     <MDBBtn disabled className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#004AAD"}} type='button'>

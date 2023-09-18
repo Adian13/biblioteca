@@ -17,7 +17,7 @@ import {
 
 
 
-const IscrittiModal = ({modalEventiData,showEventi,setShowEventi,amministratore}) => {
+const IscrittiModal = ({modalEventiData,showEventi,setShowEventi,amministratore,idClub}) => {
     
     const {state: { email } } = useAuth();
     const [modalData, setModalData] = useState(null);
@@ -32,7 +32,7 @@ const IscrittiModal = ({modalEventiData,showEventi,setShowEventi,amministratore}
     
     return (
     <>
-    <Modal modalData={modalData} show={show} setShow={setShow}/> 
+    <Modal modalData={modalData} show={show} setShow={setShow} idClub={idClub}/> 
     <MDBModal show={showEventi} setShow={setShowEventi} tabIndex='-1'>
         <MDBModalDialog size='xl'>
           <MDBModalContent>
@@ -48,6 +48,7 @@ const IscrittiModal = ({modalEventiData,showEventi,setShowEventi,amministratore}
                         <tr className="text-uppercase fs-5 fw-bold font-monospace">
                             <th scope='col'>Nome</th>
                             <th scope='col'>Descrizione</th>
+                            <th scope='col'>Libro</th>
                             <th scope='col'>Data</th>
                             <th scope='col'>Ora</th>
                             {amministratore&&<th scope='col' className='text-center'>Azioni</th>}
@@ -65,6 +66,7 @@ const IscrittiModal = ({modalEventiData,showEventi,setShowEventi,amministratore}
                                 <tr>
                                     <th scope='row'>{evento.nome}</th>
                                     <td>{evento.descrizione}</td>
+                                    <td>{evento.libro}</td>
                                     <td>{evento.data}</td>
                                     <td>{evento.ora}</td>
                                     {amministratore&&<td className='text-center'>

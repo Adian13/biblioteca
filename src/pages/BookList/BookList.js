@@ -7,6 +7,7 @@ import { MDBTable, MDBTableHead, MDBTableBody, MDBContainer, MDBRow,  MDBBtn, MD
 import LibriModal from '../../components/LibriModal';
 import useAuth from"../../contexts/useAuth";
 import { useNavigate, useParams } from 'react-router-dom';
+import config from '../../config';
 
 const BookList = () => {
 
@@ -21,7 +22,7 @@ const BookList = () => {
     useEffect(() => {
         if(biblioteca){
             async function fetchData(){
-                const result=await axios.get("http://localhost:8080/prenotazione-libri/ricerca", {params:{"stringa": biblioteca, "filtro": "biblioteca"}});
+                const result=await axios.get("http://"+config.ip+":"+config.port+"/prenotazione-libri/ricerca", {params:{"stringa": biblioteca, "filtro": "biblioteca"}});
                 console.log("sono nel primo if", result.data)
                 setLibri(result.data);
             }
@@ -29,7 +30,8 @@ const BookList = () => {
             
         }else{
             async function fetchData(){
-                const result = await (axios.get("http://localhost:8080/prenotazione-libri"));
+                const result = await (axios.get("http://"+config.ip+":"+config.port+"/prenotazione-libri"));
+                console.log("result",result.data)
                 setLibri(result.data);
             }
             fetchData();  
@@ -39,8 +41,10 @@ const BookList = () => {
     }, [])
 
     const showModal= async(modalData)=>{
+        console.log("modalData",modalData)
 
-        const result = await (axios.get("http://localhost:8080/prenotazione-libri/"+modalData.idLibro.toString()+"/visualizza-libro"));
+        const result = await (axios.get("http://"+config.ip+":"+config.port+"/prenotazione-libri/"+modalData.id+"/visualizza-libro"));
+        console.log("lista biblioteche",result.data)
         setListaBiblioteche(result.data);
         setModalData(modalData);
         setShow(true);
@@ -55,7 +59,7 @@ const BookList = () => {
                 <MDBRow className='me-4 ms-4'>
                     <MDBRow className='mt-5'>
                         <MDBCol size='7'>
-                            <Search scope='libri' set={setLibri} URL={"http://localhost:8080/prenotazione-libri/ricerca"}/>
+                            <Search scope='libri' set={setLibri} URL={"http://"+config.ip+":"+config.port+"/prenotazione-libri/ricerca"}/>
                         </MDBCol>
                     </MDBRow>
                     {utente==="Biblioteca"&&
@@ -84,7 +88,7 @@ const BookList = () => {
                                     libri.map((libro) => {
                                         return (
                                             <tr>
-                                                <th scope='row'>inserisci immagine</th>
+                                                <th scope='row'>{libro.immagineLibro ? <img width="100" height="150" style={{objectFit:"cover"}}  src={`data:image/png;base64,${libro.immagineLibro}`}/>: 'Immagine non disponibile'}</th>
                                                 <td>{libro.titolo}</td>
                                                 <td>
                                                     <div>

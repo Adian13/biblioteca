@@ -3,6 +3,7 @@ import AuthContext from "./AuthContext";
 import { reducer, actions, initialState } from "./state";
 import axios from "axios";
 import jwt from 'jwt-decode';
+import config from "../config";
 
 async function loginUser(email,password) {
   
@@ -10,7 +11,7 @@ async function loginUser(email,password) {
 
   formData.append("email",email);
   formData.append("password",password);
-  const result =  axios.post('http://localhost:8080/autenticazione/login',formData);
+  const result =  axios.post("http://"+config.ip+":"+config.port+'/autenticazione/login',formData);
   return result;
 }
 
@@ -37,9 +38,17 @@ function AuthProvider({ children }) {
       });
 
     }
-    }
+  }
+  
+  const logout = ()=>{
+    dispatch({
+      type: actions.init,
+      data: { token: null, utente:null, email:null, error:false }
+    });
+  }
   return (
     <AuthContext.Provider value={{
+      logout,
       login,
       state,
       dispatch

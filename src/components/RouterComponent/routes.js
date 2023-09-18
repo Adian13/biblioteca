@@ -7,9 +7,15 @@ import Biblioteche from '../../pages/Biblioteche/Biblioteche';
 import Esperti from '../../pages/Esperti/Esperti';
 import ClubList from '../../pages/ClubList/ClubList';
 import BookList from '../../pages/BookList/BookList';
-import AreaUtente from '../../pages/AreaUtente/AreaUtente';
+import AreaUtenteBiblioteca from '../../pages/AreaUtente/AreaUtenteBiblioteca';
+import AreaUtenteEsperto from '../../pages/AreaUtente/AreaUtenteEsperto';
+import AreaUtenteLettore from '../../pages/AreaUtente/AreaUtenteLettore';
 import Club from '../../pages/Club/Club';
 import InserimentoLibri from '../../pages/InserimentoLibri/InserimentoLibri';
+import RichiestePage from '../../pages/Richieste/RichiestePage';
+import RichiesteLettorePage from '../../pages/Richieste/RichiesteLettorePage';
+import PostPage from '../../pages/Post/PostPage';
+import CommentiPage from '../../pages/Post/CommentiPage';
 
 export const routes=[
     {
@@ -34,11 +40,27 @@ export const routes=[
     },
     {
         path: '/clubDelLibro',
-        element: <ClubList/>,
+        element: <ClubList lettore="false" esperto="false"/>,
+    },
+    {
+        path: '/clubDelLibro/lettore',
+        element: <ClubList lettore="true" esperto="false"/>,
+    },
+    {
+        path: '/clubDelLibro/esperto',
+        element: <ClubList lettore="false" esperto="true"/>,
+    },
+    {
+        path: '/clubDelLibro/:id/info',
+        element: <Club/>
     },
     {
         path: '/clubDelLibro/:id',
-        element: <Club/>
+        element: <PostPage/>
+    },
+    {
+        path: '/clubDelLibro/:id/:idPost',
+        element: <CommentiPage/>
     },
     {
         path: '/bookList',
@@ -55,9 +77,26 @@ export const routes=[
         element: <InserimentoLibri/>
     },
     {
-        path: '/areaUtente',
-        element: <AreaUtente/>
+        path: '/areaUtente/Biblioteca',
+        element: <AreaUtenteBiblioteca/>
     },
+    {
+        path: '/areaUtente/Biblioteca/richieste',
+        element: <RichiestePage/>
+    },
+    {
+        path: '/areaUtente/Esperto',
+        element: <AreaUtenteEsperto/>
+    },
+    {
+        path: '/areaUtente/Lettore',
+        element: <AreaUtenteLettore/>
+    },
+    {
+        path: '/areaUtente/Lettore/richieste',
+        element: <RichiesteLettorePage/>
+    },
+    
     {
         path: '*',
         element: <ErrorPage/>

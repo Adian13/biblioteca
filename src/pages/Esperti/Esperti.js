@@ -3,18 +3,25 @@ import NavBar from '../../components/NavBar'
 import Footer from '../../components/Footer'
 import Search from '../../components/Search';
 import axios from "axios";
+import config from '../../config';
 import { MDBTable, MDBTableHead, MDBTableBody, MDBContainer, MDBRow,  MDBBtn, MDBIcon, MDBCol } from 'mdb-react-ui-kit';
 
 const Esperti = () => {
+    
     const [esperti, setEsperti]=useState([]);
-    useEffect(() => {
-        async function getData(){
-            const response =  await axios.get('http://localhost:8080/esperto/lista-esperti');
-            console.log("generi",response.data)
-            setEsperti(response.data)
-        }      
 
-        getData();
+    useEffect(() => {
+
+        
+            async function getData(){
+                const response =  await axios.get("http://"+config.ip+":"+config.port+"/esperto/lista-esperti");
+                console.log("generi",response.data)
+                setEsperti(response.data)
+            }      
+            
+            getData();
+        
+        
 
       }, []);
     
@@ -26,7 +33,7 @@ const Esperti = () => {
                 <MDBRow className='me-4 ms-4'>
                     <MDBRow className='mt-5'>
                         <MDBCol size='7'>
-                            <Search scope='esperti' set={setEsperti} URL='http://localhost:8080/comunicazione-esperto/ricerca'/>
+                            <Search scope='esperti' set={setEsperti} URL={"http://"+config.ip+":"+config.port+'/comunicazione-esperto/ricerca'}/>
                         </MDBCol>
                     </MDBRow>
                     <MDBRow>

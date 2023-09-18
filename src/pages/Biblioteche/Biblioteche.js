@@ -4,6 +4,7 @@ import Footer from '../../components/Footer'
 import Search from '../../components/Search';
 import BibliotecheModal from '../../components/BibliotecheModal';
 import axios from "axios";
+import config from '../../config';
 
 import { MDBTable, MDBTableHead, MDBTableBody, MDBContainer, MDBRow,  MDBBtn, MDBIcon, MDBCol } from 'mdb-react-ui-kit';
 
@@ -19,7 +20,7 @@ const Biblioteche = () => {
     useEffect(() => {
         async function fetchData(){
 
-            const result = await (axios.get("http://localhost:8080/biblioteca/visualizza-biblioteche"));
+            const result = await (axios.get("http://"+config.ip+":"+config.port+"/biblioteca/visualizza-biblioteche"));
             console.log("biblioteche",result.data)
             setBiblioteche(result.data);
         }      
@@ -28,8 +29,8 @@ const Biblioteche = () => {
 
     const showModal= async(modalData)=>{
 
-        const esperti = await axios.get("http://localhost:8080/club-del-libro/visualizza-esperti-biblioteca",{params:{"emailBiblioteca":modalData.email}})
-        const club = await axios.get("http://localhost:8080/club-del-libro/visualizza-clubs-biblioteca",{params:{"emailBiblioteca":modalData.email}})
+        const esperti = await axios.get("http://"+config.ip+":"+config.port+"/club-del-libro/visualizza-esperti-biblioteca",{params:{"emailBiblioteca":modalData.email}})
+        const club = await axios.get("http://"+config.ip+":"+config.port+"/club-del-libro/visualizza-clubs-biblioteca",{params:{"emailBiblioteca":modalData.email}})
 
         modalData["listaEsperti"]=esperti.data;
         modalData["listaClub"]=club.data;
@@ -47,7 +48,7 @@ const Biblioteche = () => {
                 <MDBRow className='me-4 ms-4'>
                     <MDBRow className='mt-5'>
                         <MDBCol size='7'>
-                            <Search scope='biblioteche' set={setBiblioteche} URL={"http://localhost:8080/biblioteca/ricerca"}/>
+                            <Search scope='biblioteche' set={setBiblioteche} URL={"http://"+config.ip+":"+config.port+"/biblioteca/ricerca"}/>
                         </MDBCol>
                     </MDBRow>
                     <MDBRow>

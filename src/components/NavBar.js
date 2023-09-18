@@ -16,7 +16,12 @@ import useAuth from"../contexts/useAuth";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const {state: { token } } = useAuth();
+  const {logout,state: { token,utente } } = useAuth();
+
+  const esci=()=>{
+    logout();
+    navigate('/')
+  }
   return (
     // fixed='top'
       <MDBNavbar  className='shadow-5-strong'style={{ backgroundColor: '#001633' }}> 
@@ -38,10 +43,10 @@ const NavBar = () => {
           <MDBDropdown>
           <MDBDropdownToggle  className='me-1 btn-dark btn-rounded btn-lg' style={{backgroundColor:"#38B6FF"}}><MDBIcon className='me-1' fas icon="user" /></MDBDropdownToggle>
           <MDBDropdownMenu>
-            <MDBDropdownItem  link childTag='button' onClick={()=>navigate('/areaUtente')}>
+            <MDBDropdownItem  link childTag='button' onClick={()=>navigate('/areaUtente/'+utente)}>
               Area Utente
             </MDBDropdownItem>
-            <MDBDropdownItem  link childTag='button' >
+            <MDBDropdownItem  link childTag='button' onClick={esci} >
               Log-out
             </MDBDropdownItem>
           </MDBDropdownMenu>
