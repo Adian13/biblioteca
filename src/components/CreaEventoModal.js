@@ -20,38 +20,57 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
     const {state: { token } } = useAuth();
 
     useEffect(() => {
-        if(modalData!=null){
+        console.log("modal data",modalData)
+        if(show&&modalData!=null){
             if(modalData.libro==null){modalData.libro=""}
             setEvento({...modalData,"ora":modalData.ora.substring(0,5)})
         }      
-    }, [])
+    }, [show])
 
     const handleSubmit=async()=> {
-        const formData = new FormData();
-        console.log("evento",evento)
-        formData.append("idClub",idClub);
-        formData.append("nome",evento.nome);
-        formData.append("descrizione",evento.descrizione);
-        formData.append("timeString",evento.ora);
-        formData.append("dateString",evento.data);
-        
-        const AuthStr = 'Bearer '.concat(token);
+        if(!modalData){
+            const formData = new FormData();
+            console.log("evento",evento)
+            formData.append("idClub",idClub);
+            formData.append("nome",evento.nome);
+            formData.append("descrizione",evento.descrizione);
+            formData.append("timeString",evento.ora);
+            formData.append("dateString",evento.data);
+            
+            const AuthStr = 'Bearer '.concat(token);
+    
+            const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/crea",formData,{ headers:{Authorization: AuthStr}})
+            console.log("risposta",response.data)
+            if(response.data.statusOk){
+                setEvento({nome:"",descrizione:"",data:"",ora:"",libro:""})
+            }
+        }else{
+            const formData = new FormData();
+            console.log("evento",evento)
+            formData.append("idClub",idClub);
+            formData.append("idEvento",idClub);
+            formData.append("nome",evento.nome);
+            formData.append("descrizione",evento.descrizione);
+            formData.append("timeString",evento.ora);
+            formData.append("dateString",evento.data);
+            
+            const AuthStr = 'Bearer '.concat(token);
+    
+            const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/modifica",formData,{ headers:{Authorization: AuthStr}})
+            console.log("risposta",response.data)
+            if(response.data.statusOk){
+                setEvento({nome:"",descrizione:"",data:"",ora:"",libro:""})
+            }
 
-        const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/crea",formData,{ headers:{"Content-Type":"multipart/form-data", Authorization: AuthStr}})
-        console.log("risposta",response.data)
-        if(response.data.statusOk){
-            setEvento({nome:"",descrizione:"",data:"",ora:"",libro:""})
         }
 
     }
 
-        const handleInputChange=(e)=>{
-            const {name,value}=e.target;
-    
-                setEvento({...evento,[name]:value})
-            
-    
-        }
+    const handleInputChange=(e)=>{
+        const {name,value}=e.target;
+
+        setEvento({...evento,[name]:value})
+    }
     
 
 

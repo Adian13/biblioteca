@@ -16,6 +16,9 @@ import RichiestePage from '../../pages/Richieste/RichiestePage';
 import RichiesteLettorePage from '../../pages/Richieste/RichiesteLettorePage';
 import PostPage from '../../pages/Post/PostPage';
 import CommentiPage from '../../pages/Post/CommentiPage';
+import ModificaBiblioteca from '../../pages/ModificaDatiAccount/ModificaBiblioteca';
+import ModificaEsperto from '../../pages/ModificaDatiAccount/ModificaEsperto';
+import ModificaLettore from '../../pages/ModificaDatiAccount/ModificaLettore';
 
 export const routes=[
     {
@@ -81,6 +84,10 @@ export const routes=[
         element: <AreaUtenteBiblioteca/>
     },
     {
+        path: '/areaUtente/Biblioteca/modifica',
+        element: <ModificaBiblioteca/>
+    },
+    {
         path: '/areaUtente/Biblioteca/richieste',
         element: <RichiestePage/>
     },
@@ -89,8 +96,16 @@ export const routes=[
         element: <AreaUtenteEsperto/>
     },
     {
+        path: '/areaUtente/Esperto/modifica',
+        element: <ModificaEsperto/>
+    },
+    {
         path: '/areaUtente/Lettore',
         element: <AreaUtenteLettore/>
+    },
+    {
+        path: '/areaUtente/Lettore/modifica',
+        element: <ModificaLettore/>
     },
     {
         path: '/areaUtente/Lettore/richieste',

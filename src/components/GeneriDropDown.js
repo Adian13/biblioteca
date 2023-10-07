@@ -18,7 +18,7 @@ import config from '../config';
 import axios from 'axios';
 
 
-const GeneriDropDown = ({generiUtente}) => {
+const GeneriDropDown = ({generiUtente,aggiorna,setAggiorna}) => {
   const [generi,setGeneri]=useState([]);
   const[scelta,setScelta]=useState();
   const [generiDefinitivi,setGeneriDefinitivi]=useState([]);
@@ -45,6 +45,8 @@ const GeneriDropDown = ({generiUtente}) => {
       var filtered=temp.filter((value)=>{return value.nome!=scelta})
       setGeneri(filtered)
       setGeneriDefinitivi([...generiDefinitivi,scelta])
+      const select=document.getElementById("select_generi")
+      select.selectedIndex=0;
     }else{
       var temp=generiDefinitivi;
       var filtered=temp.filter((value)=>{return value!=val})
@@ -80,7 +82,7 @@ const GeneriDropDown = ({generiUtente}) => {
   }, [])
 
   return (
-    <MDBDropdown>
+    <MDBDropdown onHide={()=>{setAggiorna(!aggiorna)}}>
       <MDBDropdownToggle className=' btn-dark btn-rounded ' size="lg" style={{backgroundColor:"#001633"}}>Gestione generi</MDBDropdownToggle>
       <MDBDropdownMenu >
         <MDBCard alignment='center'>

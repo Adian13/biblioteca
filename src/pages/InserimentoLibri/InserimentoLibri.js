@@ -14,7 +14,9 @@ import {
   } from 'mdb-react-ui-kit';
 import NavBar from '../../components/NavBar'
 import Footer from '../../components/Footer'
-import InserimentoLibriForm from '../../components/InserimentoLibriForm';
+import InserimentoArchivio from './InserimentoArchivio.js';
+import InserimentoIsbn from './InserimentoIsbn.js';
+import InserimentoManuale from"./InserimentoManuale.js";
 import axios from "axios";
 import config from '../../config';
 
@@ -68,9 +70,9 @@ const InserimentoLibri = () => {
                     </MDBTabsItem>
                 </MDBTabs>
                 <MDBTabsContent className='mb-3 mt-5 d-flex justify-content-center' >
-                    <MDBTabsPane show={tab === 'tab1'}><InserimentoLibriForm scope="isbn" generi={generi}/></MDBTabsPane>
-                    <MDBTabsPane show={tab === 'tab2'}><InserimentoLibriForm scope="archivio" generi={generi}/></MDBTabsPane>
-                    <MDBTabsPane show={tab === 'tab3'}><InserimentoLibriForm scope="man" generi={generi}/></MDBTabsPane>
+                    <MDBTabsPane show={tab === 'tab1'}><InserimentoIsbn listaGeneri={generi}/></MDBTabsPane>
+                    <MDBTabsPane show={tab === 'tab2'}><InserimentoArchivio /></MDBTabsPane> 
+                    <MDBTabsPane show={tab === 'tab3'}><InserimentoManuale listaGeneri={generi}/></MDBTabsPane> 
                 </MDBTabsContent>
             </MDBCardBody>
         </MDBCard>

@@ -22,6 +22,7 @@ const AreaUtenteLettore = () => {
     const { state: {token,utente} } = useAuth();
     const [datiUtente,setDatiUtente]=useState({});
     const[show,setShow]=useState();
+    const[update,setUpdate]=useState(true)
     const[generi,setGeneri]=useState([]);
     const navigate = useNavigate();
 
@@ -38,7 +39,7 @@ const AreaUtenteLettore = () => {
 
         getData();
 
-      }, []);
+      }, [update]);
 
   return (
     <div style={{backgroundColor:"#E3F2FD"}}>
@@ -57,7 +58,7 @@ const AreaUtenteLettore = () => {
                                 <picture><img class="border rounded-circle d-xl-flex justify-content-xl-center" src='..\..\user.png' /></picture>
                             </div>
                         <MDBRow className='mt-3 ms-2 me-2'>
-                            <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button'>Modifica dati account</MDBBtn>
+                            <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button' onClick={()=>navigate("/areaUtente/Lettore/modifica")}>Modifica dati account</MDBBtn>
                         </MDBRow>
                             <MDBRow className='mt-3 ms-2 me-2'>
                                 <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button' onClick={()=>navigate('/areaUtente/Lettore/richieste')}>Visualizza tickets</MDBBtn>
@@ -81,7 +82,7 @@ const AreaUtenteLettore = () => {
                                 <MDBCardTitle className='text-start fw-bold fs-3 mt-1'>Informazioni account </MDBCardTitle>
                             </MDBCol>
                             <MDBCol>
-                            <GeneriDropDown generiUtente={[...datiUtente.generi]} />
+                            <GeneriDropDown generiUtente={[...datiUtente.generi]} setAggiorna={setUpdate} aggiorna={update} />
                             </MDBCol>
                         </MDBRow>
                             <MDBListGroup className='mt-5 ms-2 shadow'>

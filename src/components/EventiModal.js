@@ -14,12 +14,14 @@ import {
     MDBBtn,
     MDBIcon,
  } from 'mdb-react-ui-kit';
+ import config from '../config';
+ import axios from 'axios';
 
 
 
-const IscrittiModal = ({modalEventiData,showEventi,setShowEventi,amministratore,idClub}) => {
+const EventiModal = ({modalEventiData,showEventi,setShowEventi,amministratore,idClub}) => {
     
-    const {state: { email } } = useAuth();
+    const {state: { token } } = useAuth();
     const [modalData, setModalData] = useState(null);
     const [show, setShow] = useState(false);
 
@@ -28,6 +30,16 @@ const IscrittiModal = ({modalEventiData,showEventi,setShowEventi,amministratore,
         setModalData(modalData);
         setShowEventi(false);
         setShow(true);
+    }
+
+    const deleteEvent= async(idEvento)=>{
+        const formData = new FormData();
+        formData.append("idClub",idClub);
+        formData.append("idEvento",idEvento);
+        const AuthStr = 'Bearer '.concat(token);
+
+        const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/elimina-evento",formData,{ headers:{"Content-Type":"multipart/form-data", Authorization: AuthStr}})
+        console.log("response",response.data)
     }
     
     return (
@@ -71,7 +83,7 @@ const IscrittiModal = ({modalEventiData,showEventi,setShowEventi,amministratore,
                                     <td>{evento.ora}</td>
                                     {amministratore&&<td className='text-center'>
                                         <MDBBtn  id={evento.nome} floating style={{ backgroundColor: '#004AAD' }} >
-                                            <MDBIcon far icon="trash-alt" />
+                                            <MDBIcon far icon="trash-alt" onClick={()=>{deleteEvent(evento.idEvento)}}/>
                                         </MDBBtn>
                                         <MDBBtn  id={evento.nome} floating style={{ backgroundColor: '#004AAD' }} className='ms-2 text-center' onClick={()=>showModal(evento)}>
                                             <MDBIcon far icon="edit" />
@@ -91,4 +103,4 @@ const IscrittiModal = ({modalEventiData,showEventi,setShowEventi,amministratore,
   )
 }
 
-export default IscrittiModal
+export default EventiModal

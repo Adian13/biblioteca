@@ -21,6 +21,7 @@ const AreaUtenteEsperto = () => {
     const { state: {token,utente} } = useAuth();
     const [datiUtente,setDatiUtente]=useState({});
     const navigate = useNavigate();
+    const[update,setUpdate]=useState(true)
 
     useEffect(() => {
         async function getData(){
@@ -33,7 +34,7 @@ const AreaUtenteEsperto = () => {
 
         getData();
 
-      }, []);
+      }, [update]);
 
   return (
     <div style={{backgroundColor:"#E3F2FD"}}>
@@ -51,7 +52,7 @@ const AreaUtenteEsperto = () => {
                                 <picture><img class="border rounded-circle d-xl-flex justify-content-xl-center" src='..\..\user.png' /></picture>
                             </div>
                         <MDBRow className='mt-3 ms-2 me-2'>
-                            <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button'>Modifica dati account</MDBBtn>
+                            <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button' onClick={()=>{navigate("/areaUtente/Esperto/modifica")}}>Modifica dati account</MDBBtn>
                         </MDBRow>
                         <MDBRow className='mt-3 ms-2 me-2'>
                             <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button' onClick={()=>{navigate("/clubDelLibro/esperto")}}>Visualizza clubs</MDBBtn>
@@ -70,7 +71,7 @@ const AreaUtenteEsperto = () => {
                             <MDBCardTitle className='text-start fw-bold fs-3 mt-1'>Informazioni account </MDBCardTitle>
                         </MDBCol>
                         <MDBCol>
-                            <GeneriDropDown generiUtente={[...datiUtente.generi]} />
+                            <GeneriDropDown generiUtente={[...datiUtente.generi]} setAggiorna={setUpdate} aggiorna={update} />
                         </MDBCol>
                     </MDBRow>
                         <MDBListGroup className='mt-5 ms-2 shadow'>
