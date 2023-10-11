@@ -39,7 +39,7 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
             
             const AuthStr = 'Bearer '.concat(token);
     
-            const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/crea",formData,{ headers:{Authorization: AuthStr}})
+            const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/crea/",formData,{ headers:{Authorization: AuthStr}})
             console.log("risposta",response.data)
             if(response.data.statusOk){
                 setEvento({nome:"",descrizione:"",data:"",ora:"",libro:""})
@@ -48,7 +48,7 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
             const formData = new FormData();
             console.log("evento",evento)
             formData.append("idClub",idClub);
-            formData.append("idEvento",idClub);
+            formData.append("idEvento",evento.idEvento);
             formData.append("nome",evento.nome);
             formData.append("descrizione",evento.descrizione);
             formData.append("timeString",evento.ora);
@@ -56,7 +56,7 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
             
             const AuthStr = 'Bearer '.concat(token);
     
-            const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/modifica",formData,{ headers:{Authorization: AuthStr}})
+            const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/modifica/",formData,{ headers:{Authorization: AuthStr}})
             console.log("risposta",response.data)
             if(response.data.statusOk){
                 setEvento({nome:"",descrizione:"",data:"",ora:"",libro:""})

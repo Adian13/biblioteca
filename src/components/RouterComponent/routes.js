@@ -1,5 +1,5 @@
 import React, { Children } from 'react';
-import Registration from '../../pages/Registration/Registration'
+import Registrazione from '../../pages/Registration/Registrazione'
 import Login from '../../pages/Login/Login';
 import HomePage from '../../pages/home';
 import ErrorPage from '../../pages/ErrorPage'
@@ -19,6 +19,9 @@ import CommentiPage from '../../pages/Post/CommentiPage';
 import ModificaBiblioteca from '../../pages/ModificaDatiAccount/ModificaBiblioteca';
 import ModificaEsperto from '../../pages/ModificaDatiAccount/ModificaEsperto';
 import ModificaLettore from '../../pages/ModificaDatiAccount/ModificaLettore';
+import RegistrazioneEsperto from '../../pages/Registration/RegistrazioneEsperto';
+import RegistrazioneBiblioteca from '../../pages/Registration/RegistrazioneBiblioteca';
+import RegistrazioneLettore from '../../pages/Registration/RegistrazioneLettore';
 
 export const routes=[
     {
@@ -31,7 +34,19 @@ export const routes=[
     },
     {
         path: '/registrazione',
-        element: <Registration/>
+        element: <Registrazione/>
+    },
+    {
+        path: '/registrazione/esperto',
+        element: <RegistrazioneEsperto/>
+    },
+    {
+        path: '/registrazione/lettore',
+        element: <RegistrazioneLettore/>
+    },
+    {
+        path: '/registrazione/biblioteca',
+        element: <RegistrazioneBiblioteca/>
     },
     {
         path: '/biblioteche',
