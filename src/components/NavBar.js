@@ -41,9 +41,9 @@ const NavBar = () => {
           {token?
           <>
           <MDBDropdown>
-          <MDBDropdownToggle  className='me-1 btn-dark btn-rounded btn-lg' style={{backgroundColor:"#38B6FF"}}><MDBIcon className='me-1' fas icon="user" /></MDBDropdownToggle>
+          <MDBDropdownToggle  className='me-1 btn-dark btn-rounded btn-lg' style={{backgroundColor:"#38B6FF"}} id="Dropdown"><MDBIcon className='me-1' fas icon="user" /></MDBDropdownToggle>
           <MDBDropdownMenu>
-            <MDBDropdownItem  link childTag='button' onClick={()=>navigate('/areaUtente/'+utente)}>
+            <MDBDropdownItem  link childTag='button' onClick={()=>navigate('/areaUtente/'+utente)} id="AreaUtente">
               Area Utente
             </MDBDropdownItem>
             <MDBDropdownItem  link childTag='button' onClick={esci} >
