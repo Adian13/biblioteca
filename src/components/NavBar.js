@@ -53,8 +53,8 @@ const NavBar = () => {
         </MDBDropdown>
           </>:
           <MDBNavbarItem className='d-flex justify-content-end'>
-            <MDBBtn className='me-1 btn-dark btn-rounded btn-lg' style={{backgroundColor:"#38B6FF"}} type='button' onClick={()=>navigate('/login')}>log-in</MDBBtn>
-            <MDBBtn className='btn-dark btn-rounded btn-lg' style={{backgroundColor:"#38B6FF"}} type='button' onClick={()=>navigate('/registrazione')}>registrati</MDBBtn>          
+            <MDBBtn className='me-1 btn-dark btn-rounded btn-lg' style={{backgroundColor:"#38B6FF"}} type='button' onClick={()=>navigate('/login')} id="Logging">log-in</MDBBtn>
+            <MDBBtn className='btn-dark btn-rounded btn-lg' style={{backgroundColor:"#38B6FF"}} type='button' onClick={()=>navigate('/registrazione')} id="Registrazione">Registrati</MDBBtn>          
           </MDBNavbarItem>
           } 
         </MDBContainer>

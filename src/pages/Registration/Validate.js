@@ -137,7 +137,7 @@ export function ValidateLettore(lettore){
         state=true;
     }
 
-    if(!rexnome.test(cognome.value)){
+    if(!rexnome.test(cognome)){
         error={...error,"cognomeErr":true};
         state=true;
     }

@@ -10,16 +10,6 @@ import {
 }
 from 'mdb-react-ui-kit';
 
-// async function loginUser(credentials) {
-//     return fetch('http://localhost:8080/autenticazione/login', {
-//     method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(credentials)
-//     })
-//    }
-
 function LoginForm({setta}){
 
 const [email, setUserName] = useState('');
@@ -42,7 +32,7 @@ return(
       <MDBInput type="password" value={password} onChange={(e) => setPassword(e.target.value)} wrapperClass='mb-4' label='Password' id='form4' />
       
       {error&&<p style={{color:"#FF0000"}}>Username o password errati</p>}
-      <MDBBtn onClick= {()=>{ login(email,password)}} className='w-100 mb-4' size='md'>sign up</MDBBtn>
+      <MDBBtn onClick= {()=>{ login(email,password)}} className='w-100 mb-4' size='md' id="LogInBtn">sign up</MDBBtn>
     </div>
 );
 }

@@ -27,7 +27,7 @@ function Registration() {
 
       <MDBRow>
         <MDBCol size="6">
-          <MDBCard background='dark' className='text-white m-3 text-center bg-image hover-overlay hover-zoom  hover-shadow' onClick={()=>navigate('/registrazione/esperto')}>
+          <MDBCard background='dark' className='text-white m-3 text-center bg-image hover-overlay hover-zoom  hover-shadow' id="RegistrazioneEsperto" onClick={()=>navigate('/registrazione/esperto')}>
             <MDBCardImage width="100" height="250" style={{objectFit:"cover"}} overlay src='/home/RegistrazioneEsperto.jpg' alt='...' />
             <MDBCardOverlay>
             <MDBCardTitle className='mt-5 fs-4' style={{backgroundColor:"black"}}><b>REGISTRATI COME ESPERTO</b></MDBCardTitle>
@@ -35,7 +35,7 @@ function Registration() {
           </MDBCard>
         </MDBCol>
         <MDBCol size="6">
-          <MDBCard background='dark' className='text-white m-3 text-center bg-image hover-overlay hover-zoom  hover-shadow' onClick={()=>navigate('/registrazione/lettore')}>
+          <MDBCard background='dark' className='text-white m-3 text-center bg-image hover-overlay hover-zoom  hover-shadow' id="RegistrazioneLettore" onClick={()=>navigate('/registrazione/lettore')}>
             <MDBCardImage width="100" height="250" style={{objectFit:"cover"}} overlay src='/home/registrazioneLettore.jpg' alt='...' />
             <MDBCardOverlay>
               <MDBCardTitle className='mt-5 fs-4' style={{backgroundColor:"black"}}><b>REGISTRATI COME LETTORE</b></MDBCardTitle>
@@ -45,7 +45,7 @@ function Registration() {
       </MDBRow>
       <MDBRow>
         <MDBCol size="6">
-          <MDBCard background='dark' className='text-white m-3 text-center bg-image hover-overlay hover-zoom  hover-shadow' onClick={()=>navigate('/registrazione/biblioteca')}>
+          <MDBCard background='dark' className='text-white m-3 text-center bg-image hover-overlay hover-zoom  hover-shadow' id="RegistrazioneBiblioteca" onClick={()=>navigate('/registrazione/biblioteca')}>
             <MDBCardImage width="100" height="250" style={{objectFit:"cover"}} overlay src='/home/registrazioneBiblioteca.jpg' alt='...' />
             <MDBCardOverlay>
               <MDBCardTitle className='mt-5 fs-4' style={{backgroundColor:"black"}}><b>REGISTRA LA TUA BIBLIOTECA</b></MDBCardTitle>

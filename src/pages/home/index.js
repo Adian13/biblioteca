@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import NavBar from '../../components/NavBar';
 import Card from '../../components/ImageCard/ImageCard';
 import Footer from '../../components/Footer';
@@ -6,6 +6,9 @@ import { MDBContainer, MDBRow, MDBCol } from 'mdb-react-ui-kit';
 
 
 const HomePage = () => {
+  useEffect(()=>{
+    document.title="Home Page"
+  },[])
   return (
     <>
     <NavBar />

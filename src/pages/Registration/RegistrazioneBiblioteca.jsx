@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   MDBBtn,
@@ -26,6 +26,9 @@ const RegistrazioneBiblioteca = () => {
   const [toSend,setToSend]=useState({})
   const[error,setError]=useState({nomeBibliotecaErr:false,emailErr:false,passwordErr:false,confermaPasswordErr:false,viaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false})
 
+  useEffect(()=>{
+    document.title="Registrazione Biblioteca";
+  },[])
 
   const handleInputChange=(e)=>{
       const {name,value}=e.target;
@@ -35,7 +38,7 @@ const RegistrazioneBiblioteca = () => {
 
   const handleSubmit=async(e)=>{
     const{state,error}=ValidateBiblioteca(datiUtente)
-    if(!error){
+    if(!state){
 
       const formData = new FormData();
         console.log("utente ricevuto",datiUtente)
@@ -53,7 +56,7 @@ const RegistrazioneBiblioteca = () => {
       console.log("response",response)
       if(response.data.statusOk){
         setDatiUtente({nomeBiblioteca:"",email:"",username:"",password:"",confermaPassword:"",provincia:"",citta:"",via:"",recapitoTelefonico:""})
-        alert("registrazione effettuata con successo")
+        navigate("/");
       }
     }else{
       setError(error)
@@ -95,7 +98,7 @@ return (
               {error.recapitoTelefonicoErr&&<label className='fs-10 mb-2 text-danger'>Recapito telefonico non valido</label>}
               <MDBInput type="text" wrapperClass='mb-4' label='Recapito telefonico' name="recapitoTelefonico" value={datiUtente.recapitoTelefonico} onChange={handleInputChange}/>
               <div className='text-end'>
-                <MDBBtn className='btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={(e)=>{handleSubmit(e)}} >Registrati</MDBBtn>
+                <MDBBtn className='btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={(e)=>{handleSubmit(e)}} id="Registratibtn2">Registrati</MDBBtn>
               </div>
           </MDBCardBody>
         </MDBCard>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/NavBar';
@@ -22,12 +22,17 @@ import {ValidateEsperto} from "./Validate"
 
 
 
+
 const RegistrazioneEsperto = () => {
     const navigate = useNavigate()
     const [datiUtente,setDatiUtente]=useState({nome:"",cognome:"",email:"",username:"",password:"",confermaPassword:"",provincia:"",citta:"",via:"",recapitoTelefonico:"",emailBiblioteca:""})
     const [toSend,setToSend]=useState({})
     const[error,setError]=useState({nomeErr:false,cognomeErr:false,emailErr:false,usernameErr:false,passwordErr:false,confermaPasswordErr:false,viaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false})
 
+    useEffect(()=>{
+      document.title="Registrazione Esperto";
+    },[])
+    
     const handleInputChange=(e)=>{
         const {name,value}=e.target;
 
@@ -39,8 +44,9 @@ const RegistrazioneEsperto = () => {
       console.log("datiutente", datiUtente)
 
       const{state,error}=ValidateEsperto(datiUtente)
+      
 
-      if(!error){
+      if(!state){
         
         const formData = new FormData();
         console.log("utente ricevuto",datiUtente)
@@ -56,10 +62,10 @@ const RegistrazioneEsperto = () => {
         formData.append("recapitoTelefonico",datiUtente.recapitoTelefonico)
         formData.append("emailBiblioteca",datiUtente.emailBiblioteca)
 
-        const response = await axios.post("http//"+config.ip+":"+config.port+"/registrazione/esperto",formData)
+        const response = await axios.post("http://"+config.ip+":"+config.port+"/registrazione/esperto",formData)
         if(response.data.statusOk){
           setDatiUtente({nome:"",cognome:"",email:"",username:"",password:"",confermaPassword:"",provincia:"",citta:"",via:"",recapitoTelefonico:"",emailBiblioteca:""})
-          alert("Registrazione effettuata")
+          navigate('/')
         }
       }else{
         setError(error);
@@ -108,7 +114,7 @@ const RegistrazioneEsperto = () => {
                 <MDBInput type="text" wrapperClass='mb-4' label='Lavora in' name="emailBiblioteca" value={datiUtente.emailBiblioteca} onChange={handleInputChange}/>
                 <div className='text-end'>
 
-                  <MDBBtn className='btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={(e)=>{handleSubmit(e)}} >Registrati</MDBBtn>
+                  <MDBBtn className='btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={(e)=>{handleSubmit(e)}} id="RegistratiBtn">Registrati</MDBBtn>
                 </div>
             </MDBCardBody>
           </MDBCard>

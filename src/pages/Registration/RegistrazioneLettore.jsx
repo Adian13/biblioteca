@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -26,6 +26,10 @@ const RegistrazioneLettore = () => {
   const [toSend,setToSend]=useState({})
   const[error,setError]=useState({nomeErr:false,cognomeErr:false,usernameErr:false,emailErr:false,passwordErr:false,confermaPasswordErr:false,viaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false})
 
+  useEffect(()=>{
+    document.title="Registrazione Lettore";
+  },[])
+
   const handleInputChange=(e)=>{
       const {name,value}=e.target;
 
@@ -34,7 +38,7 @@ const RegistrazioneLettore = () => {
 
   const handleSubmit=async(e)=>{
       const{state,error}=ValidateLettore(datiUtente)
-      if(!error){
+      if(!state){
         const formData = new FormData();
         console.log("utente ricevuto",datiUtente)
         formData.append("confermaPassword",datiUtente.confermaPassword)
@@ -52,9 +56,8 @@ const RegistrazioneLettore = () => {
         const response = await axios.post("http://"+config.ip+":"+config.port+"/registrazione/lettore",formData)
         console.log("response",response)
         if(response.data.statusOk){
-
             setDatiUtente({nome:"",cognome:"",email:"",username:"",password:"",confermaPassword:"",provincia:"",citta:"",via:"",recapitoTelefonico:""})
-            alert("Registrazione effettuata")
+            navigate('/')
         }
       }else{
         setError(error);
@@ -100,7 +103,7 @@ return (
               {error.recapitoTelefonicoErr&&<label className='fs-10 mb-2 text-danger'>recapito telefonico non valido</label>}
               <MDBInput type="text" wrapperClass='mb-4' label='Recapito telefonico' name="recapitoTelefonico" value={datiUtente.recapitoTelefonico} onChange={handleInputChange}/>
               <div className='text-end'>
-                <MDBBtn className='btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={(e)=>{handleSubmit(e)}} >Registrati</MDBBtn>
+                <MDBBtn className='btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={(e)=>{handleSubmit(e)}} id="Registratibtn3" >Registrati</MDBBtn>
               </div>
           </MDBCardBody>
         </MDBCard>
