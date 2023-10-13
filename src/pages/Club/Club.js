@@ -5,7 +5,7 @@ import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import useAuth from"../../contexts/useAuth";
 import IscrittiModal from '../../components/IscrittiModal';
-import EventiModal from '../../components/EventiModal';
+import EventiModal from './EventiModal';
 import config from '../../config';
 
 import {

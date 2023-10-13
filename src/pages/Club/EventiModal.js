@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
-import useAuth from"../contexts/useAuth";
-import Modal from "../components/CreaEventoModal"
+import React, {useState,useEffect} from 'react'
+import useAuth from"../../contexts/useAuth";
+import Modal from "./CreaEventoModal"
 import {
     MDBModal,
     MDBModalTitle,
@@ -14,7 +14,7 @@ import {
     MDBBtn,
     MDBIcon,
  } from 'mdb-react-ui-kit';
- import config from '../config';
+ import config from '../../config';
  import axios from 'axios';
 
 
@@ -24,6 +24,13 @@ const EventiModal = ({modalEventiData,showEventi,setShowEventi,amministratore,id
     const {state: { token } } = useAuth();
     const [modalData, setModalData] = useState(null);
     const [show, setShow] = useState(false);
+
+    useEffect(()=>{
+        if(showEventi){
+            document.title="Eventi"
+        }
+
+    },[showEventi])
 
     const showModal= async(modalData)=>{
 
