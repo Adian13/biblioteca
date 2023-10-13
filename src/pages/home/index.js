@@ -16,16 +16,16 @@ const HomePage = () => {
 
         <MDBRow className=' gx-2 ms-2'>
           <MDBCol md='3'>
-            <Card area="biblioteche"/>
+            <Card id="CardBiblioteca"area="biblioteche"/>
           </MDBCol>
           <MDBCol md='3'>
-            <Card area="clubs"/>
+            <Card id="CardClubDelLibro"area="clubs"/>
           </MDBCol>
           <MDBCol md='3'>
-            <Card area="esperti"/>
+            <Card id="CardEsperti"  area="esperti"/>
           </MDBCol>
           <MDBCol md='3'>
-            <Card area="prenotazioni"/>
+            <Card id="CardPrenotazioni" area="prenotazioni"/>
           </MDBCol>
         </MDBRow>
     </MDBContainer>

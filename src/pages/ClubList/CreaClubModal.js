@@ -12,16 +12,18 @@ import {
     MDBTextArea
  } from 'mdb-react-ui-kit';
  import axios from 'axios';
- import config from '../config';
- import useAuth from"../contexts/useAuth";
+ import config from '../../config';
+ import useAuth from"../../contexts/useAuth";
+ import {ValidateClub} from "./Validate";
 
 const CreaClubModal = ({modalData,show,setShow}) => {
 
     const [club,setClub]=useState({nome:"",descrizione:"",generi:[],immagine:""});
     const [generi,setGeneri]=useState([]);
-    const[idClub,setIdClub]=useState();
-    const[modifica,setModifica]=useState(false)
+    const [idClub,setIdClub]=useState();
+    const [modifica,setModifica]=useState(false)
     const {state: { token } } = useAuth();
+    const [error,setError]=useState({nomeErr:false,descrizioneErr:false,immagineErr:false})
 
     useEffect(() => {
         async function fetchData(){
@@ -37,10 +39,11 @@ const CreaClubModal = ({modalData,show,setShow}) => {
                 setClub({nome:modalData.nome,descrizione:modalData.descrizione,generi:[],immagine:modalData.immagineCopertina})
             }
             fetchData()
+            
         }
         
-
     }, [show])
+
 
     const handleInputChange=(e)=>{
         const {name,value,files}=e.target;
@@ -56,8 +59,10 @@ const CreaClubModal = ({modalData,show,setShow}) => {
         }
     }
 
-    const handleSubmit=async()=>{
-        if(modifica){
+    const handleSubmitModifica=async()=>{
+
+        const {state,error}=ValidateClub(club);
+        if(!state){
             const formData = new FormData();
             formData.append("id",idClub);
             formData.append("nome",club.nome);
@@ -70,8 +75,18 @@ const CreaClubModal = ({modalData,show,setShow}) => {
             if(response.data.statusOk){
                 alert("club modificato");
                 onClose()
+            }else if(response.data.descrizione==="Richiesta non valida"){
+                setError({...error,"immagineErr":true});
             }
         }else{
+            setError(error);
+        }
+    }
+
+    const handleSubmit=async()=>{
+
+        const {state,error}=ValidateClub(club);
+        if(!state){
             const formData = new FormData();
             formData.append("nome",club.nome);
             formData.append("descrizione",club.descrizione);
@@ -79,11 +94,16 @@ const CreaClubModal = ({modalData,show,setShow}) => {
             formData.append("immagineCopertina",club.immagine);
             const AuthStr = 'Bearer '.concat(token);
 
-            const response= await axios.post("http://"+config.ip+":"+config.port+"/club-del-libro/crea",formData,{ headers:{"Content-Type":"multipart/form-data", Authorization: AuthStr}})
+            const response= await axios.post("http://"+config.ip+":"+config.port+"/club-del-libro/crea/",formData,{ headers:{"Content-Type":"multipart/form-data", Authorization: AuthStr}})
+            console.log("response",response.data)
             if(response.data.statusOk){
                 alert("club creato");
                 onClose()
+            }else if(response.data.payload.descrizione==="Richiesta non valida"){
+                setError({...error,immagineErr:true});
             }
+        }else{
+            setError(error);
         }
     }
 
@@ -91,7 +111,6 @@ const CreaClubModal = ({modalData,show,setShow}) => {
         const select=document.getElementById("selectform")
         select.selectedIndex=-1;
         for(let i=0;i<=generi.length;i++){
-            console.log("i",i)
             if(i>0){ select[i].disabled=false}
         }
         setClub({nome:"",descrizione:"",generi:[],immagine:""})
@@ -117,7 +136,9 @@ const CreaClubModal = ({modalData,show,setShow}) => {
                 <label className='mt-2 mb-2 fs-4'><b>Inserisci i dati relativi al club</b></label>
                 <div className='row mt-3'>
                     <div className='col-md-6'>
+                        {error.nomeErr&&<label className='fs-10 mb-2 text-danger'>Nome non valido</label>}
                         <MDBInput style={{backgroundColor:"#FFFFFF"}} label='Nome' id='1' type='text' value={club.nome} name="nome" onChange={handleInputChange} />
+                        {error.descrizionedErr&&<label className='fs-10 mb-2 text-danger'>Descrizione non valida</label>}
                         <MDBTextArea style={{backgroundColor:"#FFFFFF"}} className='mt-3' label='Descrizione' id='2' rows={3} value={club.descrizione} name="descrizione" onChange={handleInputChange}/>
                     </div>
                     <div className='col-md-6 text-center'>
@@ -134,10 +155,11 @@ const CreaClubModal = ({modalData,show,setShow}) => {
                     </div>
                     <div className='row mt-2'>
                         <label><b>Copertina</b></label>
+                        {error.immagineErr&&<label className='fs-10 mb-2 text-danger'>Copertina non valida</label>}
                         <input name="immagine" className='form-control ms-4 mt-1' type='file' id='inputGroupFile02' accept="image/*" onChange={handleInputChange}/>
                     </div>
                     <div className='row mt-4 mb-3 text-center'>
-                        <MDBBtn className='btn-dark btn-rounded btn-lg ms-2' style={{backgroundColor:"#004AAD"}} type='button' onClick={handleSubmit} >Invia dati</MDBBtn>
+                        <MDBBtn id="SubmitClubBtn" className='btn-dark btn-rounded btn-lg ms-2' style={{backgroundColor:"#004AAD"}} type='button' onClick={modifica?handleSubmitModifica:handleSubmit} >Invia dati</MDBBtn>
                     </div>
                 </div>
             </div>

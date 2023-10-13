@@ -4,7 +4,7 @@ import Footer from '../../components/Footer';
 import Search from '../../components/Search';
 import axios from "axios";
 import useAuth from"../../contexts/useAuth";
-import Modal from '../../components/CreaClubModal';
+import Modal from './CreaClubModal';
 import { useNavigate } from 'react-router-dom';
 import config from '../../config';
 import { MDBTable, MDBTableHead, MDBTableBody, MDBContainer, MDBRow,  MDBBtn, MDBIcon, MDBCol } from 'mdb-react-ui-kit';
@@ -50,19 +50,24 @@ const ClubList = ({lettore,esperto}) => {
         }      
         fetchData();
     }
+    if(!show){
+
+        document.title="Club del Libro"
+    }
+
 
     }, [show])
 
     const showModal= async(modalData)=>{
         
         setModalData(modalData);
-        console.log("modal data",modalData)
+        document.title="Crea-Modifica Club"
         setShow(true);
     }
 
   return (
     <>
-        <Modal modalData={modalData} show={show} setShow={setShow}  /> 
+        <Modal id="CreaModificaClubModal" modalData={modalData} show={show} setShow={setShow}  /> 
         <MDBContainer fluid className="p-0">
             <NavBar  />
             <MDBRow className='me-4 ms-4 mt-5'>
@@ -71,7 +76,7 @@ const ClubList = ({lettore,esperto}) => {
             </ MDBCol>
             {utente==="Esperto"&&
                 <MDBCol className='d-flex align-items-center justify-content-center' size='5'>
-                    <MDBBtn className='btn-dark btn-rounded btn-lg mt-2 d-flex align-items-center' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>{showModal(null)}}> <MDBIcon className='me-2 shadow' size="2x" fas icon="plus-circle" />Crea un nuovo club del libro</MDBBtn>
+                    <MDBBtn id="CreaClubBtn" className='btn-dark btn-rounded btn-lg mt-2 d-flex align-items-center' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>{showModal(null)}}> <MDBIcon className='me-2 shadow' size="2x" fas icon="plus-circle"  />Crea un nuovo club del libro</MDBBtn>
 
                 </MDBCol>
             }
@@ -96,7 +101,7 @@ const ClubList = ({lettore,esperto}) => {
                                 </tr>
                             }
                             {clubs&&
-                                clubs.map((club) => {
+                                clubs.map((club,id) => {
                                     return (
                                         <tr>
                                             <th scope='row'>{club.immagineCopertina ? <img width="100" height="100" style={{objectFit:"cover"}}  src={`data:image/png;base64,${club.immagineCopertina}`}/>: 'Immagine non disponibile'}</th>
@@ -116,14 +121,14 @@ const ClubList = ({lettore,esperto}) => {
                                             <td>{club.nomeEsperto}</td>
                                             <td className='text-center'>{club.iscritti}</td>
                                             <td className=' text-center'>
-                                            <MDBBtn floating style={{ backgroundColor: '#004AAD' }} onClick={()=>navigate("/clubDelLibro/"+club.idClub)}>
+                                            <MDBBtn id={"SearchBtn"+id}floating style={{ backgroundColor: '#004AAD' }} onClick={()=>navigate("/clubDelLibro/"+club.idClub)}>
                                                 <MDBIcon fas icon="search" size="lg" />
                                             </MDBBtn>
                                             </td>
                                             {utente==="Esperto"&&
                                                 <td className=' text-center'>
                                                      {email===club.email&& 
-                                                        <MDBBtn floating style={{ backgroundColor: '#004AAD' }} onClick={()=>{showModal(club)}}>
+                                                        <MDBBtn id={"ModificaClubBtn"+id} floating style={{ backgroundColor: '#004AAD' }} onClick={()=>{showModal(club)}}>
                                                             <MDBIcon fas icon="search" size="lg" />
                                                         </MDBBtn>
                                                      }
