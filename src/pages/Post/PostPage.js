@@ -49,7 +49,7 @@ const PostPage = () => {
             <NavBar  />
             <MDBRow className='me-4 ms-4 mt-5'>
                 <MDBCol size='7'>
-                    <MDBBtn className='btn-dark btn-rounded btn-lg mt-2 d-inline-flex align-items-center' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>navigate("/clubDelLibro/"+id+"/info")}><MDBIcon className='me-2 shadow' size="2x" fas icon="info-circle" />Visualizza info Club</MDBBtn>
+                    <MDBBtn id="VisualizzaInfoBtn" className='btn-dark btn-rounded btn-lg mt-2 d-inline-flex align-items-center' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>navigate("/clubDelLibro/"+id+"/info")}><MDBIcon className='me-2 shadow' size="2x" fas icon="info-circle" />Visualizza info Club</MDBBtn>
                     {isAmministratore===true&&<MDBBtn className='ms-2 btn-dark btn-rounded btn-lg mt-2 d-inline-flex align-items-center' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>{showModal()}}><MDBIcon className='me-2 shadow' size="2x" fas icon="plus-circle" />Crea un nuovo post</MDBBtn>}
                 </MDBCol>
                 <MDBRow >

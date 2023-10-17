@@ -22,6 +22,7 @@ import {
 const RichiestePage = () => {
 
     const [aggiorna,setAggiorna]=useState(0);
+    const [error,setError]=useState(false);
     const [ticketAperti,setTicketAperti]=useState([]);
     const [ticketAccettati,setTicketAccettati]=useState([]);
     const [ticketChiusi,setTicketChiusi]=useState([]);
@@ -49,7 +50,7 @@ const RichiestePage = () => {
       const giorni=giorniPrestito[indexGiorni]
       const AuthStr = 'Bearer '.concat(token);
       
-      if(tipo=="accetta"&& giorni>0){
+      if(tipo==="accetta"&& giorni>=1){
           
         const formData = new FormData();  
         formData.append("id",id);
@@ -63,7 +64,7 @@ const RichiestePage = () => {
           temp[indexGiorni]=0;
           setGiorniPrestito(temp)
           setAggiorna(aggiorna+1)
-          alert("Ticket accettato")
+          alert("ticket accettato")
         }
       }else if(tipo=="rifiuta"){
         const formData = new FormData();  
@@ -76,6 +77,8 @@ const RichiestePage = () => {
           alert("Ticket rifiutato")
         }
 
+      }else if(tipo==="accetta"&&giorni<1){
+        alert("giorni non validi")
       }else{
         const formData = new FormData();  
         formData.append("id",id);
@@ -103,6 +106,7 @@ const RichiestePage = () => {
         }
 
         getData();
+        document.title="Ticket Biblioteca"
 
       },[aggiorna]);
 
@@ -115,17 +119,17 @@ const RichiestePage = () => {
     
       <MDBTabs justify className='m-3' style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }} >
         <MDBTabsItem>
-          <MDBTabsLink onClick={() => handleJustifyClick('tab1')} active={justifyActive === 'tab1'}>
+          <MDBTabsLink id="TicketApertiTab1" onClick={() => handleJustifyClick('tab1')} active={justifyActive === 'tab1'}>
             <b className='fs-4 text-capitalize fst-italic'>Ticket aperti</b>
           </MDBTabsLink>
         </MDBTabsItem>
         <MDBTabsItem>
-          <MDBTabsLink onClick={() => handleJustifyClick('tab2')} active={justifyActive === 'tab2'}>
+          <MDBTabsLink id="TicketAccettatiTab2" onClick={() => handleJustifyClick('tab2')} active={justifyActive === 'tab2'}>
           <b className='fs-4 text-capitalize fst-italic'>Ticket accettati</b>
           </MDBTabsLink>
         </MDBTabsItem>
         <MDBTabsItem>
-          <MDBTabsLink onClick={() => handleJustifyClick('tab3')} active={justifyActive === 'tab3'}>
+          <MDBTabsLink id="TicketChiusiTab3" onClick={() => handleJustifyClick('tab3')} active={justifyActive === 'tab3'}>
           <b className='fs-4 text-capitalize fst-italic'>Ticket chiusi</b>
           </MDBTabsLink>
         </MDBTabsItem>
@@ -134,44 +138,44 @@ const RichiestePage = () => {
       <MDBTabsContent >
         <MDBTabsPane show={justifyActive === 'tab1'} className='text-center' >
           <MDBTable  striped hover borderColor="primary">
-                              <MDBTableHead style={{ backgroundColor: '#38B6FF' }}>
-                                  <tr className="text-uppercase fs-5 fw-bold font-monospace">
-                                      <th scope='col'>Richiesto da:</th>
-                                      <th scope='col'>Data richiesta</th>
-                                      <th scope='col'>Nome libro</th>
-                                      <th scope='col'>Descrizione libro</th>
-                                      <th scope='col'>Giorni durata prestito</th>
-                                      <th className="text-center"scope='col'>Accetta/rifiuta</th>
-                                  </tr>
-                              </MDBTableHead>
-                              <MDBTableBody >
-                              {ticketAperti.length===0 &&
-                                  <tr >
-                                      <td colSpan={6} className='text-center'>Nessun ticket da mostrare</td>
-                                  </tr>
-                                  }
-                                  {
-                                      ticketAperti.map((ticket,index) => {
-                                          return (
-                                              <tr>
-                                                  <th scope='row'>{ticket.lettore}</th>
-                                                  <td>{ticket.dataRichiesta}</td>
-                                                  <td>{ticket.libro.titolo}</td>
-                                                  <td>{ticket.libro.descrizione}</td>
-                                                  <td><MDBInput value={giorniPrestito.index} name='fname' onChange={handleChange} id={index} required/></td>
-                                                  <td className=' text-center'>
-                                                  <MDBBtn floating style={{ backgroundColor: '#004AAD' }} onClick={()=>{AzioneTicketInAttesa("accetta",index,ticket.idTicket)}}>
-                                                    <MDBIcon fas icon="check" />
-                                                  </MDBBtn>
-                                                  <MDBBtn floating style={{ backgroundColor: '#004AAD' }} className='ms-2' onClick={()=>{AzioneTicketInAttesa("rifiuta",index,ticket.idTicket)}}>
-                                                    <MDBIcon fas icon="trash" />
-                                                  </MDBBtn>
-                                                  </td>
-                                              </tr>
-                                          )
-                                      })
-                                  } 
-                              </MDBTableBody>
+              <MDBTableHead style={{ backgroundColor: '#38B6FF' }}>
+                  <tr className="text-uppercase fs-5 fw-bold font-monospace">
+                      <th scope='col'>Richiesto da:</th>
+                      <th scope='col'>Data richiesta</th>
+                      <th scope='col'>Nome libro</th>
+                      <th scope='col'>Descrizione libro</th>
+                      <th scope='col'>Giorni durata prestito</th>
+                      <th className="text-center"scope='col'>Accetta/rifiuta</th>
+                  </tr>
+              </MDBTableHead>
+              <MDBTableBody >
+              {ticketAperti.length===0 &&
+                  <tr >
+                      <td colSpan={6} className='text-center'>Nessun ticket da mostrare</td>
+                  </tr>
+                  }
+                  {
+                      ticketAperti.map((ticket,index) => {
+                          return (
+                              <tr>
+                                  <th scope='row'>{ticket.lettore}</th>
+                                  <td>{ticket.dataRichiesta}</td>
+                                  <td>{ticket.libro.titolo}</td>
+                                  <td>{ticket.libro.descrizione}</td>
+                                  <td><MDBInput  value={giorniPrestito.index} name='fname' onChange={handleChange} id={index} required/></td>
+                                  <td className=' text-center'>
+                                  <MDBBtn id={"AccettaTicketBtn"+index} floating style={{ backgroundColor: '#004AAD' }} onClick={()=>{AzioneTicketInAttesa("accetta",index,ticket.idTicket)}}>
+                                    <MDBIcon fas icon="check" />
+                                  </MDBBtn>
+                                  <MDBBtn id={"AccettaTicketBtn"+index} floating style={{ backgroundColor: '#004AAD' }} className='ms-2' onClick={()=>{AzioneTicketInAttesa("rifiuta",index,ticket.idTicket)}}>
+                                    <MDBIcon fas icon="trash" />
+                                  </MDBBtn>
+                                  </td>
+                              </tr>
+                          )
+                      })
+                  } 
+              </MDBTableBody>
           </MDBTable>
         </MDBTabsPane>
         <MDBTabsPane show={justifyActive === 'tab2'} className='text-center'>

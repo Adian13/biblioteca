@@ -30,7 +30,8 @@ const InserimentoLibri = () => {
             const result = await axios.get("http://"+config.ip+":"+config.port+"/generi");
             console.log("generi",result.data)
             setGeneri(result.data)}
-        fetchData();      
+        fetchData();
+        document.title="Inserimento Libri";     
     }, [])
 
     const handleBasicClick = (value) => {
@@ -50,21 +51,21 @@ const InserimentoLibri = () => {
         <MDBCard className='ms-5 me-5 mt-5'>
 
             <MDBCardBody className='mt-2 p-0'>
-                <MDBTabs className='mb-3 d-flex justify-content-center'>
+                <MDBTabs id="TabsLibri" className='mb-3 d-flex justify-content-center'>
                     <MDBTabsItem>
-                    <MDBTabsLink onClick={() => handleBasicClick('tab1')} active={tab === 'tab1'}>
+                    <MDBTabsLink id="TabLinkIsbnLibri" onClick={() => handleBasicClick('tab1')} active={tab === 'tab1'}>
                         <MDBIcon fas icon="barcode" /> Inserisci per ISBN
                     </MDBTabsLink>
                     </MDBTabsItem>
 
                     <MDBTabsItem>
-                    <MDBTabsLink onClick={() => handleBasicClick('tab2')} active={tab === 'tab2'}>
+                    <MDBTabsLink id="TabLinkArchivioLibri" onClick={() => handleBasicClick('tab2')} active={tab === 'tab2'}>
                         <MDBIcon far icon="folder-open" /> Inserisci dall'archivio
                     </MDBTabsLink>
                     </MDBTabsItem>
 
                     <MDBTabsItem>
-                    <MDBTabsLink onClick={() => handleBasicClick('tab3')} active={tab === 'tab3'}>
+                    <MDBTabsLink id="TabLinkManualeLibri" onClick={() => handleBasicClick('tab3')} active={tab === 'tab3'}>
                         <MDBIcon far icon="edit" /> Inserisci manualmente
                     </MDBTabsLink>
                     </MDBTabsItem>

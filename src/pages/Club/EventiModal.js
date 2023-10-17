@@ -61,7 +61,7 @@ const EventiModal = ({modalEventiData,showEventi,setShowEventi,amministratore,id
             </MDBModalHeader>
             {/* <MDBModalBody style={{backgroundColor:"#E3F2FD"}}> */}
             <MDBModalBody>
-                {amministratore&&<MDBBtn className='btn-dark btn-rounded btn-lg mt-3 d-flex align-items-center' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>{showModal(null)}} > <MDBIcon className='me-2 shadow' size="2x" fas icon="plus-circle" />Crea un nuovo evento</MDBBtn>}
+                {amministratore&&<MDBBtn id="CreaEModalBtn" className='btn-dark btn-rounded btn-lg mt-3 d-flex align-items-center' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>{showModal(null)}} > <MDBIcon className='me-2 shadow' size="2x" fas icon="plus-circle" />Crea un nuovo evento</MDBBtn>}
                 <MDBTable striped hover borderColor="primary" className='mt-4'>
                     <MDBTableHead style={{ backgroundColor: '#38B6FF' }}>
                         <tr className="text-uppercase fs-5 fw-bold font-monospace">
@@ -80,7 +80,7 @@ const EventiModal = ({modalEventiData,showEventi,setShowEventi,amministratore,id
                             </tr>
                         }
                         {
-                            modalEventiData.map((evento) => {
+                            modalEventiData.map((evento,id) => {
                             return (
                                 <tr>
                                     <th scope='row'>{evento.nome}</th>
@@ -89,10 +89,10 @@ const EventiModal = ({modalEventiData,showEventi,setShowEventi,amministratore,id
                                     <td>{evento.data}</td>
                                     <td>{evento.ora}</td>
                                     {amministratore&&<td className='text-center'>
-                                        <MDBBtn  id={evento.nome} floating style={{ backgroundColor: '#004AAD' }} >
+                                        <MDBBtn  id={"EliminaEventoIBtn"+id} floating style={{ backgroundColor: '#004AAD' }} >
                                             <MDBIcon far icon="trash-alt" onClick={()=>{deleteEvent(evento.idEvento)}}/>
                                         </MDBBtn>
-                                        <MDBBtn  id={evento.nome} floating style={{ backgroundColor: '#004AAD' }} className='ms-2 text-center' onClick={()=>showModal(evento)}>
+                                        <MDBBtn  id={"VisualizzaEventoIBtn"+id} floating style={{ backgroundColor: '#004AAD' }} className='ms-2 text-center' onClick={()=>showModal(evento)}>
                                             <MDBIcon far icon="edit" />
                                         </MDBBtn>
                                     </td>}

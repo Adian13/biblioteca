@@ -8,6 +8,7 @@ import config from "../../config"
 const InserimentoIsbn = ({listaGeneri}) => {
 
     const [libro,setLibro] = useState({isbn:'', quantita: ""})
+    const[error,setError]=useState({isbnErr:false,quantitaErr:false})
     const {state: { token } } = useAuth();
     const[scelta,setScelta]=useState();
     const [generi,setGeneri]=useState()
@@ -60,18 +61,26 @@ const InserimentoIsbn = ({listaGeneri}) => {
     
 
     const handleSubmit=async(e)=>{
-        //todo: eseguire i check
-        const formData = new FormData();
-        console.log("libro ricevuto",libro,generiScelti)
-        formData.append("isbn",libro.isbn);
-        formData.append("generi",generiScelti);
-        formData.append("numCopie",libro.quantita);
-        const AuthStr = 'Bearer '.concat(token);
-
-        const response = await axios.post("http://"+config.ip+":"+config.port+"/biblioteca/inserimento-isbn/",formData,{ headers:{ Authorization: AuthStr}})
-        console.log("response",response)
-        if(response.data.statusOk){
-            ResetForm();
+        if(libro.isbn==""){
+            setError({...error,isbnErr:true})
+        }else if(Number(libro.quantita)<1){
+            setError({...error,quantitaErr:true})
+        }
+        else{
+            const formData = new FormData();
+            console.log("libro ricevuto",libro,generiScelti)
+            formData.append("isbn",libro.isbn);
+            formData.append("generi",generiScelti);
+            formData.append("numCopie",libro.quantita);
+            const AuthStr = 'Bearer '.concat(token);
+    
+            const response = await axios.post("http://"+config.ip+":"+config.port+"/biblioteca/inserimento-isbn/",formData,{ headers:{ Authorization: AuthStr}})
+            console.log("response",response)
+            if(response.data.statusOk){
+                ResetForm();
+            }else if((response.data.payload.descrizione==="Formato dati non valido")||(response.data.payload.descrizione==="Errore!")){
+                setError({...error,isbnErr:true})
+            }
         }
     }
 
@@ -81,9 +90,11 @@ const InserimentoIsbn = ({listaGeneri}) => {
             <MDBRow className='m-5'>
                 <MDBCol size='5'>
                     <MDBRow>
+                        {error.isbnErr&&<label className='fs-10 mb-2 text-danger'>Isbn non valido</label>}
                         <MDBInput label='ISBN' name="isbn" id='form1' type='text' size='lg' value={libro.isbn} onChange={handleInputChange} />
                     </MDBRow>
                     <MDBRow className="mt-3">
+                        {error.quantitaErr&&<label className='fs-10 mb-2 text-danger'>Quantità non valida</label>}
                         <MDBInput  name="quantita" label='Numero di copie' id='form3' type='text' size='lg' value={libro.quantita} onChange={handleInputChange}/>
                     </MDBRow>
                 </MDBCol>
@@ -130,7 +141,7 @@ const InserimentoIsbn = ({listaGeneri}) => {
         </div>
         <MDBRow className='text-center mt-3 mb-2'>
             <div >
-            <MDBBtn className='btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={(e)=>{handleSubmit(e)}}>Conferma</MDBBtn>
+            <MDBBtn id="ConfermaIsbnLibri" className='btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={(e)=>{handleSubmit(e)}}>Conferma</MDBBtn>
             </div>
         </MDBRow>
         </>

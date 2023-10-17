@@ -17,7 +17,7 @@ import {
  import { ValidateEvent } from './Validate';
 
 const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
-    const [evento,setEvento]=useState({nome:"",descrizione:"",data:"",ora:"",idLibro:""});
+    const [evento,setEvento]=useState({nome:"",descrizione:"",data:"",ora:"",idLibro:"",idEvento:0});
     const {state: { token } } = useAuth();
     const[error,setError]=useState({nomeErr:false,descrizioneErr:false,dataErr:false,libroErr:false});
     const[listaLibri,setListaLibri]=useState([])
@@ -31,10 +31,13 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
 
         if(show&&modalData!=null){
             if(modalData.libro==null){modalData.libro=""}
+            console.log("modalData",modalData)
             setEvento({...modalData,"ora":modalData.ora.substring(0,5)})
         }
         if (show){
-            setEvento({nome:"",descrizione:"",data:"",ora:"",idLibro:""})
+            if(!modalData){
+                setEvento({nome:"",descrizione:"",data:"",ora:"",idLibro:""})
+            }
             setError({nomeErr:false,descrizioneErr:false,dataErr:false,libroErr:false})
             document.title="Crea-Modifica Evento"
             fetchData(); 
@@ -61,8 +64,9 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
             const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/crea/",formData,{ headers:{Authorization: AuthStr}})
             console.log("risposta",response.data)
             if(response.data.statusOk){
-                alert("Evento creato")
                 setEvento({nome:"",descrizione:"",data:"",ora:"",libro:""})
+                setShow(false)
+                alert("Evento creato")
             }else if(response.data.payload.descrizione==="Data non valida"){
                 setError({...error,dataErr:true})
 
@@ -82,20 +86,24 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
         if(!state){
             const formData = new FormData();
             console.log("evento",evento)
-            formData.append("idClub",idClub);
-            formData.append("idEvento",evento.idEvento);
+            formData.append("idClub",Number(idClub));
+            formData.append("idEvento",Number(evento.idEvento));
             formData.append("nome",evento.nome);
             formData.append("descrizione",evento.descrizione);
             formData.append("timeString",evento.ora);
             formData.append("dateString",evento.data);
+            if(evento.libro!=""){
+                formData.append("idLibro",Number(evento.libro));
+            }
             
             const AuthStr = 'Bearer '.concat(token);
     
             const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/modifica/",formData,{ headers:{Authorization: AuthStr}})
             console.log("risposta",response.data)
             if(response.data.statusOk){
-                alert("Evento creato")
+                alert("Evento modificato")
                 setEvento({nome:"",descrizione:"",data:"",ora:"",libro:""})
+                setShow(false)
             }else if(response.data.payload.descrizione==="Data non valida"){
                 setError({...error,dataErr:true})
 
@@ -152,7 +160,7 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
                         </select>
                     </div>
                     <div className='row mt-4 mb-3 text-center'>
-                        <MDBBtn className='btn-dark btn-rounded btn-lg ms-2' style={{backgroundColor:"#004AAD"}} type='button' onClick={modalData?handleSubmitModifica:handleSubmit}>Invia dati</MDBBtn>
+                        <MDBBtn id="sendDataBtnE"className='btn-dark btn-rounded btn-lg ms-2' style={{backgroundColor:"#004AAD"}} type='button' onClick={modalData?handleSubmitModifica:handleSubmit}>Invia dati</MDBBtn>
                     </div>
                 </div>
             </div>

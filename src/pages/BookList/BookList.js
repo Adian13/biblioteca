@@ -65,7 +65,7 @@ const BookList = () => {
                     {utente==="Biblioteca"&&
                     <MDBRow className='text-center mt-4'>
                         <div >
-                           <MDBBtn className='btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>navigate("/InserimentoLibro")}>Inserisci un nuovo libro <br/>prenotabile dalla tua biblioteca</MDBBtn>
+                           <MDBBtn id="FirstInserimentoLibriBtn" className='btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>navigate("/InserimentoLibro")}>Inserisci un nuovo libro <br/>prenotabile dalla tua biblioteca</MDBBtn>
                         </div>
                     </MDBRow>}
                     <MDBRow className='mt-4'>

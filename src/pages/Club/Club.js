@@ -148,7 +148,7 @@ const Club = () => {
                         <MDBCardTitle><h3><b>Eventi</b></h3></MDBCardTitle>
                         <hr></hr>
                         <MDBCardText>
-                            <h5>Visualizza gli <a onClick={()=>{showModalEventi()}} className="text-decoration-none">eventi</a> del club</h5>     
+                            <h5>Visualizza gli <a id="linkEventi" onClick={()=>{showModalEventi()}} className="text-decoration-none">eventi</a> del club</h5>     
                         </MDBCardText>
                         </MDBCardBody>
                     </MDBCard>
