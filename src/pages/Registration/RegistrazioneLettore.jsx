@@ -24,7 +24,7 @@ const RegistrazioneLettore = () => {
   const navigate = useNavigate()
   const [datiUtente,setDatiUtente]=useState({nome:"",cognome:"",email:"",username:"",password:"",confermaPassword:"",provincia:"",citta:"",via:"",recapitoTelefonico:""})
   const [toSend,setToSend]=useState({})
-  const[error,setError]=useState({nomeErr:false,cognomeErr:false,usernameErr:false,emailErr:false,passwordErr:false,confermaPasswordErr:false,viaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false})
+  const[error,setError]=useState({provinciaErr:false,cittaErr:false,nomeErr:false,cognomeErr:false,usernameErr:false,emailErr:false,passwordErr:false,confermaPasswordErr:false,viaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false})
 
   useEffect(()=>{
     document.title="Registrazione Lettore";
@@ -96,7 +96,9 @@ return (
               <MDBInput type="text" wrapperClass='mb-4' label='Nome' name="nome" value={datiUtente.nome} onChange={handleInputChange}/>
               {error.cognomeErr&&<label className='fs-10 mb-2 text-danger'>Cognome non valido</label>}
               <MDBInput type="text" wrapperClass='mb-4' label='Cognome' name="cognome" value={datiUtente.cognome} onChange={handleInputChange}/>
+              {error.provinciaErr&&<label className='fs-10 mb-2 text-danger'>Provincia non valida</label>}
               <MDBInput type="text" wrapperClass='mb-4' label='Provincia' name="provincia" value={datiUtente.provincia} onChange={handleInputChange}/>
+              {error.cittaErr&&<label className='fs-10 mb-2 text-danger'>Città non valida</label>}
               <MDBInput type="text" wrapperClass='mb-4' label='Città' name="citta" value={datiUtente.citta} onChange={handleInputChange}/>
               {error.viaErr&&<label className='fs-10 mb-2 text-danger'>Via non valida</label>}
               <MDBInput type="text" wrapperClass='mb-4' label='Via' name="via" value={datiUtente.via} onChange={handleInputChange}/>

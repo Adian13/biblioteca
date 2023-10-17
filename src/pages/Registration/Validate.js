@@ -1,12 +1,12 @@
 
 export  function ValidateEsperto(esperto){
     
-    var error={nomeErr:false,cognomeErr:false,emailErr:false,usernameErr:false,passwordErr:false,confermaPasswordErr:false,viaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false};
+    var error={nomeErr:false,cognomeErr:false,emailErr:false,usernameErr:false,passwordErr:false,confermaPasswordErr:false,viaErr:false,provinciaErr:false,cittaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false};
     var state=false;
-    const {nome,cognome,username,password,email,confermaPassword,via,recapitoTelefonico,emailBiblioteca}=esperto;
+    const {provincia,citta,nome,cognome,username,password,email,confermaPassword,via,recapitoTelefonico,emailBiblioteca}=esperto;
    
     //REGEX
-   var rexnome = /^[A-zÀ-ù ‘-]{2,}$/;
+   var rexnome = /^[A-zÀ-ù ‘-]{2,30}$/;
    var rextel = /^\d+$/;
    var rexvia = /^[0-9A-zÀ-ù ‘-]{2,30}$/;
    var rexemail=/^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-z]{2,10}$/;
@@ -20,6 +20,15 @@ export  function ValidateEsperto(esperto){
         error={...error,"nomeErr":true};
         state=true;
    }
+   if(!rexnome.test(provincia)){
+    error={...error,"provinciaErr":true};
+    state=true;
+    }
+
+    if(!rexnome.test(citta)){
+        error={...error,"cittaErr":true};
+        state=true;
+        }
 
    if(password.length<8){
         error={...error,"passwordErr":true};
@@ -60,16 +69,26 @@ export  function ValidateEsperto(esperto){
 }
 export  function ValidateBiblioteca(biblioteca){
     
-    var error={nomeBibliotecaErr:false,emailErr:false,passwordErr:false,confermaPasswordErr:false,viaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false};
+    var error={provinciaErr:false,cittaErr:false,nomeBibliotecaErr:false,emailErr:false,passwordErr:false,confermaPasswordErr:false,viaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false};
     var state=false;
-    const {nomeBiblioteca,password,email,confermaPassword,via,recapitoTelefonico}=biblioteca;
+    const {provincia,citta,nomeBiblioteca,password,email,confermaPassword,via,recapitoTelefonico}=biblioteca;
 
-    var rexnomeBiblioteca = /^[A-zÀ-ù “‘-]{2,}$/;
+    var rexnomeBiblioteca = /^[A-zÀ-ù “‘-]{2,30}$/;
     var rextel = /^\d+$/;
     var rexvia = /^[0-9A-zÀ-ù ‘-]{2,30}$/;
     var rexemail=/^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-z]{2,10}$/;
-    
 
+    
+    if(!rexnomeBiblioteca.test(provincia)){
+        error={...error,"provinciaErr":true};
+        state=true;
+        }
+    
+    if(!rexnomeBiblioteca.test(citta)){
+        error={...error,"cittaErr":true};
+        state=true;
+        }
+        
     if(!rexnomeBiblioteca.test(nomeBiblioteca)){
         error={...error,"nomeBibliotecaErr":true};
         state=true;
@@ -104,9 +123,9 @@ export  function ValidateBiblioteca(biblioteca){
 
 }
 export function ValidateLettore(lettore){
-    var error={nomeErr:false,cognomeErr:false,usernameErr:false,emailErr:false,passwordErr:false,confermaPasswordErr:false,viaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false};
+    var error={provinciaErr:false,cittaErr:false,nomeErr:false,cognomeErr:false,usernameErr:false,emailErr:false,passwordErr:false,confermaPasswordErr:false,viaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false};
     var state=false;
-    const {nome,cognome,username,password,email,confermaPassword,via,recapitoTelefonico}=lettore;
+    const {provincia,citta,nome,cognome,username,password,email,confermaPassword,via,recapitoTelefonico}=lettore;
 
     var rexnome=/^[A-zÀ-ù ‘-]{2,}$/;
     var rexemail=/^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-z]{2,10}$/;
@@ -117,6 +136,16 @@ export function ValidateLettore(lettore){
         error={...error,"usernameErr":true};
         state=true;
     }
+
+    if(!rexnome.test(provincia)){
+        error={...error,"provinciaErr":true};
+        state=true;
+        }
+    
+        if(!rexnome.test(citta)){
+            error={...error,"cittaErr":true};
+            state=true;
+            }
 
     if(!rexnome.test(nome)){
         error={...error,"nomeErr":true};
