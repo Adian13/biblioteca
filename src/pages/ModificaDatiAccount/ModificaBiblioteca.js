@@ -20,9 +20,10 @@ import {ValidateBiblioteca,ValidatePassword} from "./Validate"
 const ModificaBiblioteca = () => {
     const { state: {token,email} } = useAuth();
     const [datiUtente,setDatiUtente]=useState();
-    const[password,setPassword]=useState({confermaPassword:"",vecchiaPassword:"",nuovaPassword:""});
+    const[password,setPassword]=useState({confermaNuovaPassword:"",vecchiaPassword:"",nuovaPassword:""});
     const[error,setError]=useState({nomeBibliotecaErr:false,emailErr:false,viaErr:false,recapitoTelefonicoErr:false,emailBibliotecaErr:false})
     const[passwordError,setPasswordError]=useState({passwordErr:false,confermaPasswordErr:false})
+    const[vpErr,setVpErr]=useState(false);
 
     useEffect(() => {
         async function getData(){
@@ -48,17 +49,20 @@ const ModificaBiblioteca = () => {
         }
     }
 
-    const handleSubmitData=async(e)=>{
+    const handleSubmitData=async()=>{
         const{state,error}=ValidateBiblioteca(datiUtente)
+        console.log("dentro", datiUtente)
         if(!state){
             var formData = new FormData();
             for (const [key, value] of Object.entries(datiUtente)) {
                 formData.append(key,value)
             }
+            formData.append("password","casualpswd")
             const AuthStr = 'Bearer '.concat(token);
             const response =  await axios.post("http://"+config.ip+":"+config.port+'/area-utente/modifica-biblioteca',formData, { headers: { Authorization: AuthStr } });
+            console.log("response",response.data)
             if(response.data.statusOk){
-                alert("modifica ok")
+                alert("modifica dati ok")
             }
         }else{
             setError(error);
@@ -70,13 +74,17 @@ const ModificaBiblioteca = () => {
         const{state,error}=ValidatePassword(password)
         if(!state){
             var formData = new FormData();
-            for (const [key, value] of Object.entries(datiUtente)) {
+            for (const [key, value] of Object.entries(password)) {
                 formData.append(key,value)
             }
-            //todo: cambia l'URL
             const AuthStr = 'Bearer '.concat(token);
-            const response =  await axios.post("http://"+config.ip+":"+config.port+'/area-utente/modifica-biblioteca',formData, { headers: { Authorization: AuthStr } });
-            console.log("response",response)
+            const response =  await axios.post("http://"+config.ip+":"+config.port+'/area-utente/modifica-password',formData, { headers: { Authorization: AuthStr } });
+            if(response.data.payload.descrizione==="Errore!"){
+                setVpErr(true);
+            }else if(response.data.statusOk){
+                alert("modifica password ok")
+                setPassword({confermaNuovaPassword:"",vecchiaPassword:"",nuovaPassword:""});
+            }
         }else{
             setPasswordError(error);
         }
@@ -107,7 +115,7 @@ const ModificaBiblioteca = () => {
                         </>}
                     </MDBCol>
                     <MDBCol size="4" className='d-flex align-items-center justify-content-center '>
-                        <MDBBtn id="ModificaDatiBiblio" className='p-3 btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={(e)=>{handleSubmitData(e)}} >Modifica Dati</MDBBtn>
+                        <MDBBtn id="ModificaDatiBiblio" className='p-3 btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' onClick={handleSubmitData} >Modifica Dati</MDBBtn>
                     </MDBCol>
                 </MDBRow>
             </MDBCardBody>
@@ -119,11 +127,12 @@ const ModificaBiblioteca = () => {
             <MDBCardBody>
                 <MDBRow>
                     <MDBCol size="8">
+                        {vpErr&&<label className='fs-10 mb-2 text-danger'>Vecchia password errata</label>}
                         <MDBInput type="password" wrapperClass='mb-3' label='Vecchia Password' name="vecchiaPassword" value={password.vecchiaPassword} onChange={handleInputChange}/>
                         {passwordError.passwordErr&&<label className='fs-10 mb-2 text-danger'>Password non valida</label>}
                         <MDBInput type="password" wrapperClass='mb-3' label='Nuova Password' name="nuovaPassword" value={password.nuovaPassword} onChange={handleInputChange}/>
                         {passwordError.confermaPasswordErr&&<label className='fs-10 mb-2 text-danger'>le Password non coincidono</label>}
-                        <MDBInput type="password" wrapperClass='mb-3' label='Conferma Nuova Password' name="confermaPassword" value={password.confermaPassword} onChange={handleInputChange}/>
+                        <MDBInput type="password" wrapperClass='mb-3' label='Conferma Nuova Password' name="confermaNuovaPassword" value={password.confermaPassword} onChange={handleInputChange}/>
                     </MDBCol>
                     <MDBCol size="4" className='d-flex align-items-center justify-content-center '>
                         <MDBBtn className='p-3 btn-dark btn-rounded btn-lg ' style={{backgroundColor:"#004AAD"}} type='button' id="ModificaPassBiblio" onClick={(e)=>{handleSubmitPassword(e)}} >Modifica Password</MDBBtn>

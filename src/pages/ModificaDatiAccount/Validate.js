@@ -1,6 +1,6 @@
 
 export function ValidatePassword(password){
-    const{vecchiaPassword,nuovaPassword,confermaPassword}=password;
+    const{vecchiaPassword,nuovaPassword,confermaNuovaPassword}=password;
     var error={passwordErr:false,confermaPasswordErr:false};
     var state=false;
 
@@ -10,7 +10,7 @@ export function ValidatePassword(password){
         state=true;
    }
 
-   if(confermaPassword!==nuovaPassword){
+   if(confermaNuovaPassword!==nuovaPassword){
     error={...error,"confermaPasswordErr":true};
     state=true;
     }
