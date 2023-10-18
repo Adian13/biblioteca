@@ -19,10 +19,11 @@ import useAuth from"../../contexts/useAuth";
 
 const CommentiPage = () => {
     const {id,idPost} =useParams();
-    const [post,setPost]=useState([]);
+    const [post,setPost]=useState({});
     const [comment,setComment]=useState([]);
     const [username,setUsername]=useState();
-    const[newComment,setNewComment]=useState();
+    const[newComment,setNewComment]=useState("");
+    const[error,setError]=useState(false);
     const {state: { utente,token,email } } = useAuth();
 
     useEffect(() => {
@@ -30,23 +31,40 @@ const CommentiPage = () => {
             const AuthStr = 'Bearer '.concat(token);
             const formData=new FormData
             formData.append("idClub",id)
+            formData.append("idPost",idPost)
             const formData2=new FormData
             formData2.append("idPost",idPost)
 
             const result = await (axios.post("http://"+config.ip+":"+config.port+"/post/visualizza-post",formData));
             const response= await (axios.post("http://"+config.ip+":"+config.port+"/post/visualizza-commenti",formData2));
-            if (utente!=null){
+            console.log("utente",utente)
+            if ((utente==="Lettore")||(utente==="Biblioteca")||(utente==="Esperto")){
+                console.log("Utente not null")
                 const info= await axios.post("http://"+config.ip+":"+config.port+'/'+utente.toLowerCase()+'/informazioni',{}, { headers: { Authorization: AuthStr } });
+                console.log("info.data",info.data)
                 setUsername(info.data.username)
             }
-            
-            setPost([...result.data])
+            console.log("Result.data",result.data)
+            setPost(result.data)
             setComment([...response.data])
         }     
 
         fetchData();
+        document.title="Post"
 
-    }, [newComment])
+    }, [] )
+
+    useEffect(()=>{
+        async function fetchData(){
+        const formData2=new FormData
+        formData2.append("idPost",idPost)
+        const response= await (axios.post("http://"+config.ip+":"+config.port+"/post/visualizza-commenti",formData2));
+        console.log("comment",response.data)
+        setComment([...response.data])}
+
+        fetchData();
+
+    },[newComment])
 
     const handleChange=(e)=>{
         setNewComment(e.target.value);
@@ -54,14 +72,19 @@ const CommentiPage = () => {
 
     const handleSubmit= async()=>{
 
-        const formData=new FormData
-        formData.append("content",newComment)
-        formData.append("idPost",idPost)
-        const AuthStr = 'Bearer '.concat(token);
+        if(newComment.length>1){
+            const formData=new FormData
+            formData.append("content",newComment)
+            formData.append("idPost",idPost)
+            const AuthStr = 'Bearer '.concat(token);
 
-        const result = await axios.post("http://"+config.ip+":"+config.port+"/post/aggiungi-commento/",formData, { headers: { Authorization: AuthStr } });
-        if(result.data.statusOk){
-            setNewComment("")
+            const result = await axios.post("http://"+config.ip+":"+config.port+"/post/aggiungi-commento/",formData, { headers: { Authorization: AuthStr } });
+            if(result.data.statusOk){
+                setNewComment("")
+                setError(false)
+            }
+        }else{
+            setError(true);
         }
     }
 
@@ -69,21 +92,21 @@ const CommentiPage = () => {
     <>
     <NavBar/>
     
-    {post.length>0 &&
+    {post &&
     <MDBContainer fluid className=' py-5 '>
         <MDBRow className='m-0 d-flex justify-content-center'  >
             <MDBCol size="11">
                 <MDBRow style={{backgroundColor:"#85D2FF"}} className="shadow py-2">
-                    <h3 className="mb-3 mt-1" style={{"font-family":"Cambria",color:"#001633","font-size":"300%"}}><MDBIcon sixe="3x" fas icon="newspaper" /><b className='ms-2'>{post[0].titolo}</b></h3>
+                    <h3 className="mb-3 mt-1" style={{"font-family":"Cambria",color:"#001633","font-size":"300%"}}><MDBIcon sixe="3x" fas icon="newspaper" /><b className='ms-2'>{post.titolo}</b></h3>
                     <div className='mb-2'>
-                        <div className="d-inline-flex rounded-circle align-items-center justify-content-center" style={{height:"30px",width:"30px", backgroundColor:"#805300", color:"white"}} ><b>{post[0].username.substring(0,1).toUpperCase()}</b></div>
-                        <span className="d-inline ms-2" style={{"font-family":"Cambria",color:"#001633","font-size":"120%"}} >Published <u>{post[0].date}</u> by {post[0].username}</span>
+                        <div className="d-inline-flex rounded-circle align-items-center justify-content-center" style={{height:"30px",width:"30px", backgroundColor:"#805300", color:"white"}} ><b>{post.username&&post.username.substring(0,1).toUpperCase()}</b></div>
+                        <span className="d-inline ms-2" style={{"font-family":"Cambria",color:"#001633","font-size":"120%"}} >Published <u>{post.date}</u> by {post.username}</span>
                     </div>
                     <hr/>
                 </MDBRow>
 
                 <MDBRow style={{backgroundColor:"#EBF8FF"}} className='py-5 shadow'>
-                    <p style={{"font-family":"Cambria",color:"#263238","font-size":"120%"}} className='ps-5 text-break pe-5'> {post[0].content}</p>              
+                    <p style={{"font-family":"Cambria",color:"#263238","font-size":"120%"}} className='ps-5 text-break pe-5'> {post.content}</p>              
                 </MDBRow>
                 <MDBRow>
                 <section className="mt-4 py-5" style={{ backgroundColor: "#eee" }}>
@@ -102,7 +125,7 @@ const CommentiPage = () => {
                                         <div>
                                             <h6 className="fw-bold text-primary mb-1 ms-3">{commento.username}</h6>
                                             <p className="text-muted small mb-0 ms-3">
-                                                Shared publicly - {commento.date}
+                                                Shared publicly - {commento.date.substring(0,10)+" "+commento.date.substring(11,16)}
                                             </p>
                                         </div>
                                     </div>
@@ -112,8 +135,11 @@ const CommentiPage = () => {
                                     )})}
                                     </MDBCardBody>
                                     <MDBCardFooter style={{ backgroundColor: "#f8f9fa" }}>
+                                    {error&&<label className='fs-10 mb-2 text-danger'>Scrivi qualcosa per commentare</label>}
                                     <div className="d-flex flex-start w-100">
-                                        <div className="d-inline-flex rounded-circle align-items-center justify-content-center me-2" style={{height:"40px",width:"40px",backgroundColor:"#805300", color:"white"}} ><b>{utente?username.substring(0,1).toUpperCase():"G"}</b></div>
+                                        {utente===null&&<div className="d-inline-flex rounded-circle align-items-center justify-content-center me-2" style={{height:"40px",width:"40px",backgroundColor:"#805300", color:"white"}} ><b>G</b></div>}
+                                        {utente!=null&&username&&<div className="d-inline-flex rounded-circle align-items-center justify-content-center me-2" style={{height:"40px",width:"40px",backgroundColor:"#805300", color:"white"}} ><b>{username.substring(0,1).toUpperCase()}</b></div>}
+                                        
                                         <MDBTextArea disabled={!token} label={token?'commento':"esegui il log-in per scrivere commenti"} id='textAreaExample' rows={4} style={{backgroundColor: '#fff'}} wrapperClass="w-100" value={newComment} onChange={handleChange}/>
                                     </div>
                                     <div className="float-end mt-2 pt-1">

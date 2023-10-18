@@ -29,7 +29,7 @@ const PostPage = () => {
             const formData2=new FormData()
             formData2.append("id",id)
 
-            const result = await (axios.post("http://"+config.ip+":"+config.port+"/post/visualizza-post",formData));
+            const result = await (axios.post("http://"+config.ip+":"+config.port+"/post/visualizza-post-club",formData));
             const club = await (axios.post("http://"+config.ip+":"+config.port+"/club-del-libro/info-club",formData2));
             console.log("email",club.data)
 
@@ -37,7 +37,8 @@ const PostPage = () => {
             //todo: guarda punto5 dopo averlo risolto aggiusta anche qui
             console.log("email sua e mia",club.data.email,email)
             setIsAmministratore(()=>{return(club.data.emailEsperto==email)})
-        }      
+        }
+        document.title="Post Club"      
         fetchData();
 
     }, [show])
