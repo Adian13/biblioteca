@@ -41,12 +41,16 @@ const Club = () => {
             setInfo(result.data);
             if(utente==="Lettore"){
                 const AuthStr = 'Bearer '.concat(token);
-                const iscritto=await axios.get("http://"+config.ip+":"+config.port+"/club-del-libro/partecipazione-lettore/?idClub="+id,{ headers: { Authorization: AuthStr } })  
+                const formData =new FormData();
+                formData.append("idClub",id)
+                const iscritto=await axios.post("http://"+config.ip+":"+config.port+"/club-del-libro/partecipazione-lettore/",formData,{ headers: { Authorization: AuthStr } })  
                 setIscritto(iscritto.data);
             }
-        }      
+        }
+        document.title="Informazioni Club"     
         fetchData();       
     }, [])
+
 
     const showModal= async()=>{
 

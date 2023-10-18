@@ -58,7 +58,7 @@ const AreaUtenteLettore = () => {
                                 <picture><img class="border rounded-circle d-xl-flex justify-content-xl-center" src='..\..\user.png' /></picture>
                             </div>
                         <MDBRow className='mt-3 ms-2 me-2'>
-                            <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button' onClick={()=>navigate("/areaUtente/Lettore/modifica")}>Modifica dati account</MDBBtn>
+                            <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button' onClick={()=>navigate("/areaUtente/Lettore/modifica")} id="ModificaDLettor">Modifica dati account</MDBBtn>
                         </MDBRow>
                             <MDBRow className='mt-3 ms-2 me-2'>
                                 <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button' onClick={()=>navigate('/areaUtente/Lettore/richieste')}>Visualizza tickets</MDBBtn>

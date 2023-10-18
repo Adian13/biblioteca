@@ -87,7 +87,7 @@ const EventiModal = ({modalEventiData,showEventi,setShowEventi,amministratore,id
                                     <td>{evento.descrizione}</td>
                                     <td>{evento.libro}</td>
                                     <td>{evento.data}</td>
-                                    <td>{evento.ora}</td>
+                                    <td>{evento.ora.substring(0,5)}</td>
                                     {amministratore&&<td className='text-center'>
                                         <MDBBtn  id={"EliminaEventoIBtn"+id} floating style={{ backgroundColor: '#004AAD' }} >
                                             <MDBIcon far icon="trash-alt" onClick={()=>{deleteEvent(evento.idEvento)}}/>

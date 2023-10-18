@@ -52,7 +52,7 @@ const AreaUtenteEsperto = () => {
                                 <picture><img class="border rounded-circle d-xl-flex justify-content-xl-center" src='..\..\user.png' /></picture>
                             </div>
                         <MDBRow className='mt-3 ms-2 me-2'>
-                            <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button' onClick={()=>{navigate("/areaUtente/Esperto/modifica")}}>Modifica dati account</MDBBtn>
+                            <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button' onClick={()=>{navigate("/areaUtente/Esperto/modifica")}} id="ModificaDEspert">Modifica dati account</MDBBtn>
                         </MDBRow>
                         <MDBRow className='mt-3 ms-2 me-2'>
                             <MDBBtn className=' btn-dark btn-rounded btn-lg' style={{backgroundColor:"#001633"}} type='button' onClick={()=>{navigate("/clubDelLibro/esperto")}}>Visualizza clubs</MDBBtn>

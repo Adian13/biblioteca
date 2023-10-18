@@ -34,7 +34,7 @@ const Search = ({scope,set,URL}) => {
         </MDBInputGroup>
           <div className='mt-3 font-monospace' >
             <MDBRadio name='inlineRadio' id='inlineRadio1' value={fillingInfo[scope].value1} label={fillingInfo[scope].label1} onClick={(e)=>{setSearchFilter(e.target.value)}} defaultChecked inline />
-            <MDBRadio name='inlineRadio' id='inlineRadio2' value={fillingInfo[scope].value2} label={fillingInfo[scope].label2} onClick={(e)=>{setSearchFilter(e.target.value)}} inline /> 
+            {scope!=="libri"&&<MDBRadio name='inlineRadio' id='inlineRadio2' value={fillingInfo[scope].value2} label={fillingInfo[scope].label2} onClick={(e)=>{setSearchFilter(e.target.value)}} inline /> }
           </div>
     </>
   )

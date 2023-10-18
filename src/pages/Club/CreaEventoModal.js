@@ -65,8 +65,7 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
             console.log("risposta",response.data)
             if(response.data.statusOk){
                 setEvento({nome:"",descrizione:"",data:"",ora:"",libro:""})
-                setShow(false)
-                alert("Evento creato")
+                onClose();
             }else if(response.data.payload.descrizione==="Data non valida"){
                 setError({...error,dataErr:true})
 
@@ -101,9 +100,8 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
             const response= await axios.post("http://"+config.ip+":"+config.port+"/gestione-eventi/modifica/",formData,{ headers:{Authorization: AuthStr}})
             console.log("risposta",response.data)
             if(response.data.statusOk){
-                alert("Evento modificato")
                 setEvento({nome:"",descrizione:"",data:"",ora:"",libro:""})
-                setShow(false)
+                onClose() 
             }else if(response.data.payload.descrizione==="Data non valida"){
                 setError({...error,dataErr:true})
 
@@ -126,6 +124,11 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
         }
 
     }
+
+    const onClose=()=>{
+        document.title="Informazioni Club"
+        setShow(false)
+    }
        
   return (
     <MDBModal show={show} setShow={setShow} tabIndex='-1'>
@@ -133,7 +136,7 @@ const CreaEventoModal = ({modalData,show,setShow,idClub}) => {
             <MDBModalContent>
             <MDBModalHeader>
                 <MDBModalTitle> <MDBIcon fas icon="info-circle" size="lg" /><b className='ms-2'>{modalData?"Modifica i dati dell'evento":"Crea un nuovo evento"}</b></MDBModalTitle>
-                <MDBBtn className='btn-close' color='none' onClick={()=>{setShow(false)}}></MDBBtn>
+                <MDBBtn className='btn-close' color='none' onClick={()=>{onClose()}}></MDBBtn>
             </MDBModalHeader>
             <MDBModalBody style={{backgroundColor:"#E3F2FD"}}>
             <div className='container-fluid bd-example-row'>

@@ -16,7 +16,7 @@ const RichiestePage = () => {
     
     const [ticket,setTicket]=useState([]);
     const { state: {token} } = useAuth();
-    const status={IN_ATTESA_DI_CONFERMA:{color:"warning",info:"Da confermare"}}
+    const status={IN_ATTESA_DI_CONFERMA:{color:"warning",info:"Da confermare"},IN_ATTESA_DI_RESTITUZIONE:{color:"success",info:"accettato"},CHIUSO:{color:"danger",info:"chiuso"}}
 
     useEffect(() => {
         async function getData(){
@@ -61,7 +61,7 @@ const RichiestePage = () => {
                                   <p className='text-muted mb-0 fs-6'>Biblioteca: {item.biblioteca}</p>
                                 </td>
                                 <td>
-                                  <p className=' mb-1 fs-5 text-break'>Data richiesta: {item.dataRichiesta}</p>
+                                  <p className=' mb-1 fs-5 text-break'>Data richiesta: {item.dataRichiesta.substring(0,10)}</p>
                                   <p className=' mb-0 fs-5 text-break'>Data restituzione: {item.dataRestituzione}</p>
                                 </td>
                                 <td className=' text-center'>
