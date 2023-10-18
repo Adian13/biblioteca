@@ -38,7 +38,7 @@ const CommentiPage = () => {
             const result = await (axios.post("http://"+config.ip+":"+config.port+"/post/visualizza-post",formData));
             const response= await (axios.post("http://"+config.ip+":"+config.port+"/post/visualizza-commenti",formData2));
             console.log("utente",utente)
-            if ((utente==="Lettore")||(utente==="Biblioteca")||(utente==="Esperto")){
+            if ((utente==="Lettore")||(utente==="Esperto")){
                 console.log("Utente not null")
                 const info= await axios.post("http://"+config.ip+":"+config.port+'/'+utente.toLowerCase()+'/informazioni',{}, { headers: { Authorization: AuthStr } });
                 console.log("info.data",info.data)
@@ -138,12 +138,12 @@ const CommentiPage = () => {
                                     {error&&<label className='fs-10 mb-2 text-danger'>Scrivi qualcosa per commentare</label>}
                                     <div className="d-flex flex-start w-100">
                                         {utente===null&&<div className="d-inline-flex rounded-circle align-items-center justify-content-center me-2" style={{height:"40px",width:"40px",backgroundColor:"#805300", color:"white"}} ><b>G</b></div>}
-                                        {utente!=null&&username&&<div className="d-inline-flex rounded-circle align-items-center justify-content-center me-2" style={{height:"40px",width:"40px",backgroundColor:"#805300", color:"white"}} ><b>{username.substring(0,1).toUpperCase()}</b></div>}
+                                        {utente!=null&&utente!="Biblioteca"&&username&&<div className="d-inline-flex rounded-circle align-items-center justify-content-center me-2" style={{height:"40px",width:"40px",backgroundColor:"#805300", color:"white"}} ><b>{username.substring(0,1).toUpperCase()}</b></div>}
                                         
-                                        <MDBTextArea disabled={!token} label={token?'commento':"esegui il log-in per scrivere commenti"} id='textAreaExample' rows={4} style={{backgroundColor: '#fff'}} wrapperClass="w-100" value={newComment} onChange={handleChange}/>
+                                        <MDBTextArea disabled={(!token||utente==="Biblioteca")} label={token?'commento':"esegui il log-in per scrivere commenti"} id='textAreaExample' rows={4} style={{backgroundColor: '#fff'}} wrapperClass="w-100" value={newComment} onChange={handleChange}/>
                                     </div>
                                     <div className="float-end mt-2 pt-1">
-                                        <MDBBtn disabled={!token} size="sm" className="me-1  btn-dark btn-rounded btn-lg" style={{backgroundColor:"#001633"}} onClick={handleSubmit}>Commenta</MDBBtn>
+                                        <MDBBtn disabled={(!token||utente==="Biblioteca")} size="sm" className="me-1  btn-dark btn-rounded btn-lg" style={{backgroundColor:"#001633"}} onClick={handleSubmit}>Commenta</MDBBtn>
                                     </div>
                                     </MDBCardFooter>
                                 </MDBCard>
