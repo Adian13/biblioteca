@@ -7,7 +7,7 @@ import Footer from '../../components/Footer';
 import config from '../../config';
 import axios from 'axios';
 import useAuth from"../../contexts/useAuth";
-import Modal from '../../components/CreaPostModal';
+import Modal from './CreaPostModal';
 
 
 const PostPage = () => {
@@ -29,7 +29,7 @@ const PostPage = () => {
             const formData2=new FormData()
             formData2.append("id",id)
 
-            const result = await (axios.post("http://"+config.ip+":"+config.port+"/post/visualizza-post-club",formData));
+            const result = await (axios.post("http://"+config.ip+":"+config.port+"/club-del-libro/visualizza-post-club",formData));
             const club = await (axios.post("http://"+config.ip+":"+config.port+"/club-del-libro/info-club",formData2));
             console.log("email",club.data)
 
@@ -38,7 +38,12 @@ const PostPage = () => {
             console.log("email sua e mia",club.data.email,email)
             setIsAmministratore(()=>{return(club.data.emailEsperto==email)})
         }
-        document.title="Post Club"      
+        if(show){
+            document.title="Crea Post" 
+        }else{
+            document.title="Post Club" 
+        }
+             
         fetchData();
 
     }, [show])
@@ -51,7 +56,7 @@ const PostPage = () => {
             <MDBRow className='me-4 ms-4 mt-5'>
                 <MDBCol size='7'>
                     <MDBBtn id="VisualizzaInfoBtn" className='btn-dark btn-rounded btn-lg mt-2 d-inline-flex align-items-center' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>navigate("/clubDelLibro/"+id+"/info")}><MDBIcon className='me-2 shadow' size="2x" fas icon="info-circle" />Visualizza info Club</MDBBtn>
-                    {isAmministratore===true&&<MDBBtn className='ms-2 btn-dark btn-rounded btn-lg mt-2 d-inline-flex align-items-center' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>{showModal()}}><MDBIcon className='me-2 shadow' size="2x" fas icon="plus-circle" />Crea un nuovo post</MDBBtn>}
+                    {isAmministratore===true&&<MDBBtn className='ms-2 btn-dark btn-rounded btn-lg mt-2 d-inline-flex align-items-center' style={{backgroundColor:"#004AAD"}} type='button' onClick={()=>{showModal()}} id="CreaNuovoPostBottone1"><MDBIcon className='me-2 shadow' size="2x" fas icon="plus-circle"  />Crea un nuovo post</MDBBtn>}
                 </MDBCol>
                 <MDBRow >
                     <MDBTable className='mt-5' hover borderColor="primary">
@@ -67,7 +72,7 @@ const PostPage = () => {
                                 </tr>
                             }
                             {post.length>0&&
-                                post.map((item) => {
+                                post.map((item,iterator) => {
                                      return (
                                          <tr>
                                              <td className=' text-center'>
@@ -79,7 +84,7 @@ const PostPage = () => {
                                                                 <MDBCardSubTitle className='d-flex justify-content-start'>{item.content.substring(0,40)}...</MDBCardSubTitle>
                                                             </MDBCol>
                                                             <MDBCol size="2" className='text-center d-flex  justify-content-center'>
-                                                                <MDBBtn floating style={{ backgroundColor: '#004AAD' }} className='mt-1' size="lg" onClick={()=>{navigate("/clubDelLibro/"+id+"/"+item.id)}}>
+                                                                <MDBBtn floating style={{ backgroundColor: '#004AAD' }} className='mt-1' size="lg" onClick={()=>{navigate("/clubDelLibro/"+id+"/"+item.id)}} id={"VisualizzaPost"+iterator}>
                                                                     <MDBIcon fas icon="comment-dots"  size="lg"/>
                                                                 </MDBBtn>
                                                             </MDBCol>

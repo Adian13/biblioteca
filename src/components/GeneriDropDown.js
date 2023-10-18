@@ -93,7 +93,7 @@ const GeneriDropDown = ({generiUtente,aggiorna,setAggiorna}) => {
                     <div className='text-start'>
 
                     <select className='p-2' style={{width:"230px"}} id="select_generi" onChange={handleInputChange}>
-                      <option disabled>Seleziona un genere</option>
+                      <option disabled selected>Seleziona un genere</option>
                       {generi&&generi.map((genere)=>{
                         return(
                           <option value={genere.nome}>{genere.nome}</option>

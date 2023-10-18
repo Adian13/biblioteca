@@ -23,7 +23,7 @@ const CommentiPage = () => {
     const [comment,setComment]=useState([]);
     const [username,setUsername]=useState();
     const[newComment,setNewComment]=useState("");
-    const[error,setError]=useState(false);
+    const[error,setError]=useState({commentError:false,loginErr:false});
     const {state: { utente,token,email } } = useAuth();
 
     useEffect(() => {
@@ -72,19 +72,22 @@ const CommentiPage = () => {
 
     const handleSubmit= async()=>{
 
-        if(newComment.length>1){
+        if((newComment.length>3)&&(newComment.length<255)){
             const formData=new FormData
             formData.append("content",newComment)
             formData.append("idPost",idPost)
             const AuthStr = 'Bearer '.concat(token);
 
             const result = await axios.post("http://"+config.ip+":"+config.port+"/post/aggiungi-commento/",formData, { headers: { Authorization: AuthStr } });
+            console.log("aggiungi commento",result.data)
             if(result.data.statusOk){
                 setNewComment("")
-                setError(false)
+                setError({commentError:false,loginErr:false})
+            }else if(result.data.payload.descrizione==="Non sei autorizzato"){
+                setError({...error,loginErr:true});
             }
         }else{
-            setError(true);
+            setError({...error,commentError:true});
         }
     }
 
@@ -100,7 +103,7 @@ const CommentiPage = () => {
                     <h3 className="mb-3 mt-1" style={{"font-family":"Cambria",color:"#001633","font-size":"300%"}}><MDBIcon sixe="3x" fas icon="newspaper" /><b className='ms-2'>{post.titolo}</b></h3>
                     <div className='mb-2'>
                         <div className="d-inline-flex rounded-circle align-items-center justify-content-center" style={{height:"30px",width:"30px", backgroundColor:"#805300", color:"white"}} ><b>{post.username&&post.username.substring(0,1).toUpperCase()}</b></div>
-                        <span className="d-inline ms-2" style={{"font-family":"Cambria",color:"#001633","font-size":"120%"}} >Published <u>{post.date}</u> by {post.username}</span>
+                        <span className="d-inline ms-2" style={{"font-family":"Cambria",color:"#001633","font-size":"120%"}} >Published <u>{post.date&&(post.date.substring(0,10)+" "+post.date.substring(11,16))}</u> by <b>{post.username&&post.username}</b></span>
                     </div>
                     <hr/>
                 </MDBRow>
@@ -135,7 +138,8 @@ const CommentiPage = () => {
                                     )})}
                                     </MDBCardBody>
                                     <MDBCardFooter style={{ backgroundColor: "#f8f9fa" }}>
-                                    {error&&<label className='fs-10 mb-2 text-danger'>Scrivi qualcosa per commentare</label>}
+                                    {error.commentError&&<label className='fs-10 mb-2 text-danger'>Commento non della giusta dimensione</label>}
+                                    {error.loginErr&&<label className='fs-10 mb-2 text-danger'>Iscriviti al club per commentare</label>}
                                     <div className="d-flex flex-start w-100">
                                         {utente===null&&<div className="d-inline-flex rounded-circle align-items-center justify-content-center me-2" style={{height:"40px",width:"40px",backgroundColor:"#805300", color:"white"}} ><b>G</b></div>}
                                         {utente!=null&&utente!="Biblioteca"&&username&&<div className="d-inline-flex rounded-circle align-items-center justify-content-center me-2" style={{height:"40px",width:"40px",backgroundColor:"#805300", color:"white"}} ><b>{username.substring(0,1).toUpperCase()}</b></div>}
@@ -143,7 +147,7 @@ const CommentiPage = () => {
                                         <MDBTextArea disabled={(!token||utente==="Biblioteca")} label={token?'commento':"esegui il log-in per scrivere commenti"} id='textAreaExample' rows={4} style={{backgroundColor: '#fff'}} wrapperClass="w-100" value={newComment} onChange={handleChange}/>
                                     </div>
                                     <div className="float-end mt-2 pt-1">
-                                        <MDBBtn disabled={(!token||utente==="Biblioteca")} size="sm" className="me-1  btn-dark btn-rounded btn-lg" style={{backgroundColor:"#001633"}} onClick={handleSubmit}>Commenta</MDBBtn>
+                                        <MDBBtn disabled={(!token||utente==="Biblioteca")} size="sm" className="me-1  btn-dark btn-rounded btn-lg" style={{backgroundColor:"#001633"}} onClick={handleSubmit} id="commentBtn12">Commenta</MDBBtn>
                                     </div>
                                     </MDBCardFooter>
                                 </MDBCard>
