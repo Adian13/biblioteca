@@ -21,12 +21,11 @@ import {
 
 const RichiestePage = () => {
 
-    const [aggiorna,setAggiorna]=useState(0);
-    const [error,setError]=useState(false);
     const [ticketAperti,setTicketAperti]=useState([]);
     const [ticketAccettati,setTicketAccettati]=useState([]);
     const [ticketChiusi,setTicketChiusi]=useState([]);
-    const [giorniPrestito,setGiorniPrestito]=useState([0]);
+    const [giorniPrestito,setGiorniPrestito]=useState({});
+    const [aggiorna,setAggiorna]=useState(true);
     const { state: {token} } = useAuth();
     const [justifyActive, setJustifyActive] = useState('tab1');
 
@@ -34,20 +33,36 @@ const RichiestePage = () => {
         if (value === justifyActive) {
             return;
         }
-
         setJustifyActive(value);
     };
 
     const handleChange=(e)=>{
 
-      const temp=giorniPrestito
-      temp[e.target.id]=e.target.value
-      setGiorniPrestito(temp)
+      setGiorniPrestito({...giorniPrestito,[e.target.id]:e.target.value})
       
     }
 
-    const AzioneTicketInAttesa= async (tipo,indexGiorni,id)=>{
-      const giorni=giorniPrestito[indexGiorni]
+    useEffect(() => {
+      async function getData(){
+          const AuthStr = 'Bearer '.concat(token);
+          
+          const response =  await axios.post("http://"+config.ip+":"+config.port+"/prenotazione-libri/visualizza-richieste/",{}, { headers: { Authorization: AuthStr } });
+          setTicketAperti(response.data.IN_ATTESA_DI_CONFERMA);
+          setTicketAccettati(response.data.IN_ATTESA_DI_RESTITUZIONE);
+          setTicketChiusi(response.data.CHIUSO);
+          setGiorniPrestito({})
+          for (const [key, value] of Object.entries(ticketAperti)) {
+            setGiorniPrestito({...giorniPrestito,[value.idTicket]:"0"})
+          }
+      }
+
+      getData();
+      document.title="Ticket Biblioteca"
+
+    },[aggiorna]);
+
+    const AzioneTicketInAttesa= async (tipo,id)=>{
+      const giorni=giorniPrestito[id]
       const AuthStr = 'Bearer '.concat(token);
       
       if(tipo==="accetta"&& giorni>=1){
@@ -58,12 +73,8 @@ const RichiestePage = () => {
         console.log("id e giorni ",id,giorni)
   
         const response =  await axios.post("http://"+config.ip+":"+config.port+"/prenotazione-libri/ticket/accetta",formData,{ headers: { Authorization: AuthStr } } );
-        console.log(response.data)
         if(response.data.statusOk){
-          const temp=giorniPrestito;
-          temp[indexGiorni]=0;
-          setGiorniPrestito(temp)
-          setAggiorna(aggiorna+1)
+          setAggiorna(!aggiorna);
           alert("ticket accettato")
         }
       }else if(tipo=="rifiuta"){
@@ -71,44 +82,25 @@ const RichiestePage = () => {
         formData.append("id",id);
   
         const response =  await axios.post("http://"+config.ip+":"+config.port+"/prenotazione-libri/ticket/rifiuta",formData,{ headers: { Authorization: AuthStr } } );
-        console.log(response.data)
         if(response.data.statusOk){
-          setAggiorna(aggiorna+1)
+          setAggiorna(!aggiorna)
           alert("Ticket rifiutato")
         }
-
       }else if(tipo==="accetta"&&giorni<1){
         alert("giorni non validi")
-      }else{
+      }else if(tipo==="chiudi"){
         const formData = new FormData();  
         formData.append("id",id);
   
         const response =  await axios.post("http://"+config.ip+":"+config.port+"/prenotazione-libri/ticket/chiudi",formData,{ headers: { Authorization: AuthStr } } );
-        console.log(response.data)
         if(response.data.statusOk){
-          setAggiorna(aggiorna+1)
+          setAggiorna(!aggiorna)
           alert("Ticket chiuso")
         }
 
       }
-      
-
     }
 
-    useEffect(() => {
-        async function getData(){
-            const AuthStr = 'Bearer '.concat(token);
-            const response =  await axios.post("http://"+config.ip+":"+config.port+"/prenotazione-libri/visualizza-richieste/",{}, { headers: { Authorization: AuthStr } });
-            console.log("lista ticket: ",response.data)
-            setTicketAperti(response.data.IN_ATTESA_DI_CONFERMA);
-            setTicketAccettati(response.data.IN_ATTESA_DI_RESTITUZIONE);
-            setTicketChiusi(response.data.CHIUSO)
-        }
-
-        getData();
-        document.title="Ticket Biblioteca"
-
-      },[aggiorna]);
 
   return (
 
@@ -156,18 +148,19 @@ const RichiestePage = () => {
                   }
                   {
                       ticketAperti.map((ticket,index) => {
+                        var idT=ticket.idTicket;
                           return (
                               <tr>
                                   <th scope='row'>{ticket.lettore}</th>
                                   <td>{ticket.dataRichiesta}</td>
                                   <td>{ticket.libro.titolo}</td>
                                   <td>{ticket.libro.descrizione}</td>
-                                  <td><MDBInput  value={giorniPrestito.index} name='fname' onChange={handleChange} id={index} required/></td>
+                                  <td><MDBInput  value={giorniPrestito.idT} name='fname' onChange={handleChange} id={ticket.idTicket} required/></td>
                                   <td className=' text-center'>
-                                  <MDBBtn id={"AccettaTicketBtn"+index} floating style={{ backgroundColor: '#004AAD' }} onClick={()=>{AzioneTicketInAttesa("accetta",index,ticket.idTicket)}}>
+                                  <MDBBtn id={"AccettaTicketBtn"+index} floating style={{ backgroundColor: '#004AAD' }} onClick={()=>{AzioneTicketInAttesa("accetta",ticket.idTicket)}}>
                                     <MDBIcon fas icon="check" />
                                   </MDBBtn>
-                                  <MDBBtn id={"AccettaTicketBtn"+index} floating style={{ backgroundColor: '#004AAD' }} className='ms-2' onClick={()=>{AzioneTicketInAttesa("rifiuta",index,ticket.idTicket)}}>
+                                  <MDBBtn id={"RifiutaTicketBtn"+index} floating style={{ backgroundColor: '#004AAD' }} className='ms-2' onClick={()=>{AzioneTicketInAttesa("rifiuta",ticket.idTicket)}}>
                                     <MDBIcon fas icon="trash" />
                                   </MDBBtn>
                                   </td>
@@ -206,7 +199,7 @@ const RichiestePage = () => {
                               <td>{ticket.libro.titolo}</td>
                               <td>{ticket.libro.descrizione}</td>
                               <td className=' text-center'>
-                              <MDBBtn floating style={{ backgroundColor: '#004AAD' }} onClick={()=>{AzioneTicketInAttesa("chiudi",index,ticket.idTicket)}}>
+                              <MDBBtn floating style={{ backgroundColor: '#004AAD' }} onClick={()=>{AzioneTicketInAttesa("chiudi",ticket.idTicket)}}>
                                 <MDBIcon fas icon="times-circle" size="lg"/>
                               </MDBBtn>
                               </td>
